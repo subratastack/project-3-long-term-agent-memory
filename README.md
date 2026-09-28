@@ -261,6 +261,7 @@ and rejection examples.
 | Retrieval | Full-text and exact vector search, rank fusion, bounded optional reranking | Approximate indexes when justified by evaluation |
 | Temporal behavior | Historical queries, recorded supersession, trust-based conflict resolution | Future-dated replacement edge cases; optional return of unresolved claims in hits |
 | Context packing | Duplicate removal, overlap-aware selection, budget accounting, skip reports | Calibrated relevance floor and improved subject-key quality |
+| Consolidation | Deterministic episode clustering, bounded candidates, evidence thresholds, policy-governed persistence | Scheduled worker, summary refresh/supersession, global deduplication |
 | Agent integration | Development HTTP API and Python pipeline entry points | LangGraph runtime integration and working-memory lifecycle |
 | Evaluation | Retrieval and context-packing comparisons; unit and integration tests | Larger datasets, longitudinal and poisoning evaluation runners |
 
@@ -274,7 +275,7 @@ for the precise boundaries.
 ## Development and validation
 
 ```bash
-uv run pytest apps/tests/unit
+uv run pytest apps/tests/unit tests/unit/consolidation
 uv run pytest apps/tests/integration
 uv run ruff check .
 uv run mypy apps
@@ -301,6 +302,10 @@ parts. See [the test suite](apps/tests) and
 | [Reranking](docs/reranking.md) | Joint question–memory scoring, bounds, and fallback |
 | [Temporal resolution](docs/temporal-resolution.md) | Historical validity, supersession, and contradictions |
 | [Context packing](docs/context-packing.md) | Useful information under a prompt-space budget |
+| [Consolidation clustering](docs/consolidation-clustering.md) | Group related episodes by tenant, subject, category, and time |
+| [Consolidation summaries](docs/consolidation-summaries.md) | Bounded candidates with complete supporting evidence |
+| [Consolidation promotion](docs/consolidation-promotion.md) | Decide whether repetition supports an observation or procedure |
+| [Consolidation service](docs/consolidation-service.md) | Write policy, atomic persistence, and repeat-run deduplication |
 | [API reference](docs/api-reference.md) | Request fields, endpoints, and response examples |
 | [Architecture](ARCHITECTURE.md) | System boundaries and design contracts |
 | [Architecture decision records](docs/adr) | The reasoning and tradeoffs behind the design |
