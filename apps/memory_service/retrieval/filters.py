@@ -130,6 +130,8 @@ def record_matches_filters(record: MemoryRecord, filters: RetrievalFilters) -> b
         Output:
             False
     """
+    if record.tenant_id != filters.tenant_id or record.status == MemoryStatus.TOMBSTONE:
+        return False
     if record.status not in filters.allowed_statuses:
         return False
     if record.trust_level not in filters.allowed_trust_levels:

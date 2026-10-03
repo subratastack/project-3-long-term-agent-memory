@@ -1,5 +1,6 @@
 from copy import deepcopy
 from types import SimpleNamespace
+from uuid import uuid4
 
 import pytest
 from conftest import NOW
@@ -13,6 +14,16 @@ class FakeUow:
     def __init__(self, records):
         self.stored = {m.memory_id: m for m in records}
         self.decisions = []
+        self.records = SimpleNamespace(
+            lock_lifecycle=lambda tenant: None,
+            tombstoned_event_ids=lambda tenant: {
+                p.event_id
+                for m in self.stored.values()
+                if m.status == MemoryStatus.TOMBSTONE and m.tenant_id == tenant
+                for p in m.provenance
+            },
+            save_lifecycle=lambda record: self.stored.__setitem__(record.memory_id, record),
+        )
         self.evidence = {
             p.event_id: MemoryEvent(
                 event_id=p.event_id,
@@ -63,6 +74,11 @@ def test_fifty_to_one_idempotent_and_originals_unchanged(episodes):
     assert len(summary.provenance) == 50
     assert len(summary.metadata["supporting_memory_ids"]) == 50
     assert records == original
+    for episode in original:
+        stored = uow.stored[episode.memory_id]
+        assert stored.content == episode.content
+        assert stored.provenance == episode.provenance
+        assert stored.metadata["forgetting"]["priority"] == 0.25
     assert consolidate_memories(lambda: uow, records[0].tenant_id, now=NOW) == []
     assert len(uow.stored) == 51
     summary.status = MemoryStatus.TOMBSTONE
@@ -111,7 +127,16 @@ def test_write_failure_rolls_back(episodes):
 
 def test_tenant_filtered_even_with_bad_repository(episodes):
     records = episodes()
-    from uuid import uuid4
-
     uow = FakeUow(records)
     assert consolidate_memories(lambda: uow, uuid4(), now=NOW) == []
+
+
+def test_active_copies_of_tombstoned_evidence_cannot_reconsolidate(episodes):
+    records = episodes(3)
+    tomb = records[0].model_copy(update={"memory_id": uuid4(), "status": MemoryStatus.TOMBSTONE})
+    # Even if another active record cites deleted evidence, grouping cannot use it.
+    for record in records[1:]:
+        record.provenance = records[0].provenance
+    uow = FakeUow([*records, tomb])
+    assert consolidate_memories(lambda: uow, records[0].tenant_id, now=NOW) == []
+    assert len(uow.stored) == 4

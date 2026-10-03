@@ -52,7 +52,7 @@ from apps.memory_service.ingestion.candidate_extractor import (
     build_memory_candidates,
 )
 from apps.memory_service.ingestion.normalizer import RejectedExtraction
-from apps.memory_service.ingestion.service import ingest_candidate
+from apps.memory_service.ingestion.service import ingest_candidate, record_rejected_extraction
 from apps.memory_service.persistence.unit_of_work import (
     UnitOfWork,
     build_engine,
@@ -472,7 +472,7 @@ def ingest_event(tenant_id: UUID, event_id: UUID) -> IngestResponse:
         raise HTTPException(status_code=404, detail="event not found for this tenant")
 
     outcomes_raw = build_memory_candidates(get_extractor(), [event])
-    outcomes = [_ingest_outcome(uow_factory, outcome) for outcome in outcomes_raw]
+    outcomes = [_ingest_outcome(uow_factory, tenant_id, outcome) for outcome in outcomes_raw]
     _record_ingestion(uow_factory, event, len(outcomes_raw))
 
     return IngestResponse(
@@ -563,19 +563,25 @@ def bulk_ingest_events(
     )
 
 
-def _ingest_outcome(uow_factory: UowFactory, outcome: Any | RejectedExtraction) -> IngestOutcome:
+def _ingest_outcome(
+    uow_factory: UowFactory, tenant_id: UUID, outcome: Any | RejectedExtraction
+) -> IngestOutcome:
     """Run one extracted candidate through write policy and describe the result.
 
-    A `RejectedExtraction` (e.g. the extractor cited no evidence) never
-    reaches write policy -- it is reported as `status="rejected_before_policy"`.
+    `tenant_id` is the tenant from the request path; a candidate owned by
+    any other tenant is refused (`TenantScopeError`). A `RejectedExtraction`
+    (e.g. the extractor cited no evidence) never reaches write policy -- it
+    is audited as a REJECT decision and reported as
+    `status="rejected_before_policy"`.
     """
     if isinstance(outcome, RejectedExtraction):
+        record_rejected_extraction(uow_factory, tenant_id, outcome)
         return IngestOutcome(
             status="rejected_before_policy",
             reason_codes=[outcome.reason_code],
             explanation=outcome.explanation,
         )
-    decision = ingest_candidate(uow_factory, outcome)
+    decision = ingest_candidate(uow_factory, outcome, tenant_id=tenant_id)
     return IngestOutcome(
         status=decision.decision.value,
         reason_codes=decision.reason_codes,
@@ -601,7 +607,7 @@ def _ingest_event_isolated(
         outcomes_raw = build_memory_candidates(extractor, [event])
         candidate_count = len(outcomes_raw)
         for outcome in outcomes_raw:
-            outcomes.append(_ingest_outcome(uow_factory, outcome))
+            outcomes.append(_ingest_outcome(uow_factory, event.tenant_id, outcome))
         _record_ingestion(uow_factory, event, candidate_count)
     except Exception as exc:  # isolate one event's failure from the rest of the batch
         logger.exception("bulk ingest failed for event %s", event.event_id)

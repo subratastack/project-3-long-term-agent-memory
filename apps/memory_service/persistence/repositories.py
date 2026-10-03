@@ -16,14 +16,14 @@ These repositories are normally not used directly; `UnitOfWork` (in
 
 import datetime
 from collections.abc import Collection
-from typing import cast
+from typing import Any, cast
 from uuid import UUID
 
 from sqlalchemy import ColumnElement, exists, func, or_, select, update
 from sqlalchemy.engine import CursorResult
 from sqlalchemy.orm import Session
 
-from apps.memory_service.domain.enums import MemoryStatus, MemoryType
+from apps.memory_service.domain.enums import IndexStatus, MemoryStatus, MemoryType
 from apps.memory_service.domain.models import (
     MemoryEvent,
     MemoryRecord,
@@ -404,6 +404,71 @@ class MemoryRecordRepository:
         self._session = session
         self._provenance = MemoryProvenanceRepository(session)
 
+    def lock_lifecycle(self, tenant_id: UUID) -> None:
+        """Serialize memory writes, consolidation and forgetting within one tenant.
+
+        PostgreSQL transaction advisory locks also protect the evidence-denial
+        check from racing with insertion. UUID collisions only over-serialize.
+        """
+        key = tenant_id.int % (2**63)
+        self._session.execute(select(func.pg_advisory_xact_lock(key)))
+
+    def tombstoned_event_ids(self, tenant_id: UUID) -> set[UUID]:
+        stmt = (
+            select(MemoryProvenanceRow.event_id)
+            .join(
+                MemoryRecordRow,
+                (MemoryRecordRow.memory_id == MemoryProvenanceRow.memory_id)
+                & (MemoryRecordRow.tenant_id == MemoryProvenanceRow.tenant_id),
+            )
+            .where(
+                MemoryRecordRow.tenant_id == tenant_id,
+                MemoryRecordRow.status == MemoryStatus.TOMBSTONE,
+            )
+        )
+        return set(self._session.scalars(stmt))
+
+    def list_for_maintenance(self, tenant_id: UUID) -> list[MemoryRecord]:
+        """Include inactive records for audit and lifecycle jobs, tenant-scoped."""
+        rows = self._session.scalars(
+            select(MemoryRecordRow)
+            .where(MemoryRecordRow.tenant_id == tenant_id)
+            .order_by(MemoryRecordRow.memory_id)
+            .execution_options(populate_existing=True)
+        ).all()
+        return [
+            _record_row_to_domain(row, self._provenance.list_for_memory(tenant_id, row.memory_id))
+            for row in rows
+        ]
+
+    def save_lifecycle(self, record: MemoryRecord) -> None:
+        """Persist only lifecycle fields; never rewrite evidence or content.
+
+        Callers hold lock_lifecycle for the transaction. A tombstone cannot be
+        overwritten, even by a stale snapshot of an earlier ACTIVE record.
+        """
+        values: dict[str, Any] = {
+            "status": record.status,
+            "metadata_": dict(record.metadata),
+            "updated_at": record.updated_at,
+        }
+        if record.status == MemoryStatus.TOMBSTONE:
+            values.update(
+                embedding=None, embedding_model_version=None, index_status=IndexStatus.PENDING
+            )
+        stmt = (
+            update(MemoryRecordRow)
+            .where(
+                MemoryRecordRow.tenant_id == record.tenant_id,
+                MemoryRecordRow.memory_id == record.memory_id,
+                MemoryRecordRow.status != MemoryStatus.TOMBSTONE,
+            )
+            .values(**values)
+        )
+        result = cast(CursorResult[None], self._session.execute(stmt))
+        if result.rowcount == 0:
+            raise LookupError("Memory missing or already tombstoned")
+
     def add(self, tenant_id: UUID, record: MemoryRecord) -> None:
         """Insert a new memory record together with all of its provenance.
 
@@ -439,6 +504,23 @@ class MemoryRecordRepository:
                 in `memory_provenance` for each entry in `record.provenance`)
         """
         _require_matching_tenant(record.tenant_id, tenant_id, "record")
+        self.lock_lifecycle(tenant_id)
+        if record.status == MemoryStatus.TOMBSTONE:
+            from apps.memory_service.consolidation.forgetting import tombstone_record
+
+            # Seed/import paths must also produce an auditable tombstone.
+            initial = tombstone_record(
+                record.model_copy(update={"status": MemoryStatus.ACTIVE}),
+                reason="Created as tombstone",
+                requested_by="repository:add",
+                now=datetime.datetime.now(datetime.UTC),
+            )
+            assert initial is not None
+            record = initial
+        if record.status != MemoryStatus.TOMBSTONE and self.tombstoned_event_ids(
+            tenant_id
+        ).intersection(p.event_id for p in record.provenance):
+            raise ValueError("Cannot reuse tombstoned evidence")
         self._session.add(
             MemoryRecordRow(
                 memory_id=record.memory_id,
@@ -491,7 +573,7 @@ class MemoryRecordRepository:
         stmt = select(MemoryRecordRow).where(
             MemoryRecordRow.tenant_id == tenant_id, MemoryRecordRow.memory_id == memory_id
         )
-        row = self._session.scalars(stmt).one_or_none()
+        row = self._session.scalars(stmt.execution_options(populate_existing=True)).one_or_none()
         if row is None:
             return None
         return _record_row_to_domain(row, self._provenance.list_for_memory(tenant_id, memory_id))
@@ -616,9 +698,26 @@ class MemoryRecordRepository:
                 None (the row's `status` column is now `"tombstone"`)
                 -- or raises LookupError if no such memory exists for that tenant.
         """
+        self.lock_lifecycle(tenant_id)
+        if status == MemoryStatus.TOMBSTONE:
+            from apps.memory_service.consolidation.forgetting import tombstone_records
+
+            tombstone_records(
+                self,
+                tenant_id,
+                memory_id,
+                reason="Explicit status transition",
+                requested_by="repository:update_status",
+                now=datetime.datetime.now(datetime.UTC),
+            )
+            return
         stmt = (
             update(MemoryRecordRow)
-            .where(MemoryRecordRow.tenant_id == tenant_id, MemoryRecordRow.memory_id == memory_id)
+            .where(
+                MemoryRecordRow.tenant_id == tenant_id,
+                MemoryRecordRow.memory_id == memory_id,
+                MemoryRecordRow.status != MemoryStatus.TOMBSTONE,
+            )
             .values(status=status)
         )
         result = cast(CursorResult[None], self._session.execute(stmt))
@@ -659,6 +758,7 @@ class MemoryRecordRepository:
                 -- or raises LookupError if that memory is not currently
                 ACTIVE for that tenant.
         """
+        self.lock_lifecycle(tenant_id)
         stmt = (
             update(MemoryRecordRow)
             .where(
@@ -675,9 +775,7 @@ class MemoryRecordRepository:
         )
         result = cast(CursorResult[None], self._session.execute(stmt))
         if result.rowcount == 0:
-            raise LookupError(
-                f"active memory_record {memory_id} not found for tenant {tenant_id}"
-            )
+            raise LookupError(f"active memory_record {memory_id} not found for tenant {tenant_id}")
 
 
 class MemoryRelationRepository:
@@ -796,7 +894,9 @@ class MemoryWriteDecisionRepository:
         """Insert one write-policy audit record.
 
         How it works:
-            Verifies `decision.tenant_id` matches `tenant_id`, then stages a
+            Verifies `decision.tenant_id` matches `tenant_id` and that the
+            decision carries at least one reason code -- an audit row that
+            cannot say *why* is refused (`ValueError`) -- then stages a
             `MemoryWriteDecisionRow` copying across the decision, its reason
             codes and explanation, and (when present) the accepted/superseded
             memory ids. This is called for *every* decision outcome,
@@ -818,6 +918,8 @@ class MemoryWriteDecisionRepository:
                 `accepted_memory_id` left as `NULL`)
         """
         _require_matching_tenant(decision.tenant_id, tenant_id, "decision")
+        if not decision.reason_codes:
+            raise ValueError("a write decision must carry at least one reason code")
         self._session.add(
             MemoryWriteDecisionRow(
                 decision_id=decision.decision_id,

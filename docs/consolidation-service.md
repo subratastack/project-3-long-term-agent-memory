@@ -29,7 +29,9 @@ service:checkout-api has recurring connection-pool exhaustion (3 episodes).
 It loads each referenced event in shop-a's scope and runs the write policy.
 On acceptance it stores a new active memory S with every event reference and
 the episode-to-event mapping. It stores the decision pointing to S, then
-commits. A, B, and C retain their original content and status.
+commits. A, B, and C retain their original content, provenance, and status.
+Their lifecycle metadata links to S and lowers retrieval priority to at most
+0.25 through [compaction](forgetting.md).
 
 Run the same job again with the same eligible membership: it computes the same
 output ID, finds S, and skips the write. It returns an empty decision list if
@@ -47,8 +49,8 @@ expired, or tombstoned S also prevents another write for that membership.
 
 Consolidation creates a shorter representation, not fewer database records.
 Retrieval and [context packing](context-packing.md) still decide which memories
-reach a prompt. This service does not automatically suppress original episodes
-or demonstrate a measured reduction in prompt tokens.
+reach a prompt. Compaction lowers source-episode priority, but does not exclude
+them or demonstrate a measured reduction in prompt tokens.
 
 ## The actual orchestration order
 
@@ -72,11 +74,13 @@ flowchart TD
 
 No-candidate groups and invalid/oversized summary proposals are skipped before
 policy. They are not represented by the lower branches of this diagram.
-All clusters in the call share one UnitOfWork and one final commit.
+All clusters in the call share one UnitOfWork and one final commit. Accepted
+summaries compact their source episodes before that commit.
 
 The repository load already asks for active episodic memories. The service
 also filters tenant IDs defensively; the clusterer checks type, status, validity,
-and observation dates again. It never modifies original episode records.
+and observation dates again. Tombstoned event IDs are excluded before grouping.
+Only lifecycle metadata and update timestamps change on compacted episodes.
 
 ## Evidence and trust at the write boundary
 
@@ -108,15 +112,16 @@ candidate ID also includes output type; the stored memory ID derives from the
 cluster ID and the fixed string `memory:v1`. This deliberately permits one
 stored output per exact cluster membership.
 
-Sequential runs skip that existing output. Concurrent runs can both pass the
-lookup, but the database primary key prevents two records with the same ID.
-The losing transaction raises a conflict and rolls back; retrying belongs to
-the caller, not this service. A later failure in any cluster rolls back the
+Sequential runs skip that existing output. A tenant transaction lock serializes
+cooperating consolidation and lifecycle jobs; the database primary key remains
+a final duplicate guard. Database failures propagate to the caller for retry. A later failure in any cluster rolls back the
 whole call's pending writes, including earlier clusters' decisions.
 
 This is not global summary deduplication. Adding or removing an eligible member
 changes the cluster identity and can create another, overlapping summary.
-Existing summaries are not superseded. Conversely, changing an existing
+Existing summaries are not superseded. Explicit tombstoning additionally
+blocks reuse of its evidence across changed membership; see
+[the evidence scope](forgetting.md#tombstones-and-prevention-of-re-creation). Conversely, changing an existing
 member's metadata without changing membership does not refresh an already
 stored output. Rejected candidates have no stored output, so repeated runs can
 create repeated rejection audit entries. There is no attempt ledger for skips.

@@ -67,6 +67,18 @@ def trust_rank(level: TrustLevel) -> int:
     return _TRUST_RANK[level]
 
 
+def source_baseline_trust(source_type: SourceType) -> TrustLevel:
+    """The most trust an event of `source_type` can confer (UNTRUSTED if unknown).
+
+    Example:
+        Input:
+            source_type = SourceType.CONFIGURATION
+        Output:
+            TrustLevel.SYSTEM
+    """
+    return _SOURCE_BASELINE_TRUST.get(source_type, TrustLevel.UNTRUSTED)
+
+
 def weakest_trust(levels: Iterable[TrustLevel]) -> TrustLevel:
     """Return the least-trusted level among `levels` (UNTRUSTED if empty).
 
@@ -214,7 +226,7 @@ def verify_provenance(
             reason_codes.append(INCONSISTENT_PROVENANCE)
             continue
 
-        baseline = _SOURCE_BASELINE_TRUST.get(event.source_type, TrustLevel.UNTRUSTED)
+        baseline = source_baseline_trust(event.source_type)
         verified_trust.append(weakest_trust([baseline, provenance.trust_level]))
 
     if reason_codes:

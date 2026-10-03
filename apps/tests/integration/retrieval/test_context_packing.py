@@ -128,6 +128,7 @@ def _supersede(uow: UnitOfWork, old: MemoryRecord, content: str) -> MemoryRecord
         candidate_id=uuid4(),
         decision=WriteDecision.SUPERSEDE,
         policy_version="1.0",
+        reason_codes=["NEWER_FACT_SUPERSEDES_CURRENT"],
         accepted_memory_id=replacement.memory_id,
         superseded_memory_id=old.memory_id,
     )

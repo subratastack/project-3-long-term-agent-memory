@@ -1,9 +1,10 @@
 """Consolidate one tenant atomically, retaining source records and evidence.
 
 Deterministic output primary keys make sequential runs idempotent, including
-when an earlier summary has expired or been tombstoned. Concurrent attempts
-cannot create duplicate records: a primary-key conflict rolls back the losing
-transaction, which the job runner may retry. Changed membership is a new cluster.
+when an earlier summary has expired or been tombstoned. A tenant transaction
+lock serializes cooperating jobs; the primary key is a final duplicate guard.
+Changed membership is a new cluster unless its evidence has been tombstoned.
+Accepted summaries compact their sources in the same transaction.
 """
 
 from collections.abc import Callable
@@ -11,12 +12,13 @@ from datetime import UTC, datetime
 from uuid import UUID, uuid5
 
 from apps.memory_service.consolidation.clusterer import cluster_memories
+from apps.memory_service.consolidation.forgetting import compact_consolidated
 from apps.memory_service.consolidation.promoter import promote_cluster
 from apps.memory_service.consolidation.summarizer import summarize_cluster
 from apps.memory_service.domain.enums import MemoryStatus, MemoryType, WriteDecision
 from apps.memory_service.domain.models import MemoryRecord, WritePolicyDecision
-from apps.memory_service.ingestion.provenance import verify_provenance, weakest_trust
-from apps.memory_service.ingestion.write_policy import POLICY_VERSION, evaluate_write_policy
+from apps.memory_service.ingestion.provenance import weakest_trust
+from apps.memory_service.ingestion.write_policy import POLICY_VERSION, evaluate_candidate
 from apps.memory_service.persistence.unit_of_work import UnitOfWork
 
 
@@ -35,8 +37,15 @@ def consolidate_memories(
     now = now or datetime.now(UTC)
     decisions = []
     with uow_factory() as uow:
+        uow.records.lock_lifecycle(tenant_id)
+        denied_events = uow.records.tombstoned_event_ids(tenant_id)
         episodes = uow.list_active_memories(tenant_id, memory_type=MemoryType.EPISODIC)
-        episodes = [m for m in episodes if m.tenant_id == tenant_id]
+        episodes = [
+            m
+            for m in episodes
+            if m.tenant_id == tenant_id
+            and not denied_events.intersection(p.event_id for p in m.provenance)
+        ]
         for cluster in cluster_memories(episodes, now=now):
             memory_type = promote_cluster(cluster, now=now)
             if memory_type is None:
@@ -54,8 +63,9 @@ def consolidate_memories(
                 event = uow.events.get(tenant_id, event_id)
                 if event is not None:
                     events[event_id] = event
-            check = verify_provenance(candidate, events)
-            decision = evaluate_write_policy(candidate, events)
+            # Summary wording is a deterministic template, not extractor output.
+            evaluation = evaluate_candidate(candidate, events, now=now, model_extracted=False)
+            decision = evaluation.decision
             if decision.decision in (WriteDecision.ACCEPT, WriteDecision.QUARANTINE):
                 record = MemoryRecord(
                     memory_id=memory_id,
@@ -68,7 +78,7 @@ def consolidate_memories(
                     subject_keys=candidate.subject_keys,
                     metadata=candidate.metadata,
                     trust_level=weakest_trust(
-                        [check.derived_trust_level, candidate.proposed_trust_level]
+                        [evaluation.effective_trust, candidate.proposed_trust_level]
                     ),
                     status=(
                         MemoryStatus.ACTIVE
@@ -80,6 +90,8 @@ def consolidate_memories(
                     updated_at=now,
                 )
                 uow.create_memory(record)
+                if decision.decision == WriteDecision.ACCEPT:
+                    compact_consolidated(uow, record, now)
                 decision = decision.model_copy(update={"accepted_memory_id": memory_id})
             uow.record_write_decision(decision)
             decisions.append(decision)

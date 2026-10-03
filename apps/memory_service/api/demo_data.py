@@ -288,6 +288,8 @@ class _Seeder:
         return event, record
 
     def _index(self, record: MemoryRecord) -> None:
+        if record.status == MemoryStatus.TOMBSTONE:
+            return
         self._uow.vectors.set_embedding(
             self._tenant_id,
             record.memory_id,

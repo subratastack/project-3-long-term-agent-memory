@@ -83,6 +83,7 @@ from enum import StrEnum
 from typing import TYPE_CHECKING, Literal
 from uuid import UUID
 
+from apps.memory_service.consolidation.forgetting import retrieval_priority
 from apps.memory_service.domain.enums import MemoryType
 from apps.memory_service.domain.models import MemoryRecord
 from apps.memory_service.retrieval.filters import (
@@ -288,7 +289,11 @@ def retrieve_context(
     search = hybrid_search_with_report(uow, embedder, query, reranker=reranker)
     filters = dataclasses.replace(resolve_filters(query), effective_at=search.temporal.effective_at)
     context = pack_context(
-        [hit.memory for hit in search.hits],
+        [
+            record
+            for hit in search.hits
+            if (record := uow.records.get(query.tenant_id, hit.memory.memory_id)) is not None
+        ],
         filters,
         token_budget=token_budget,
         count_tokens=count_tokens,
@@ -431,7 +436,9 @@ def _candidate(record: MemoryRecord, rank: int, count_tokens: TokenCounter) -> _
         rank=rank,
         line=line,
         tokens=max(1, count_tokens(line + "\n")),
-        base=TYPE_WEIGHTS[record.memory_type] / (RELEVANCE_RANK_K + rank),
+        base=TYPE_WEIGHTS[record.memory_type]
+        / (RELEVANCE_RANK_K + rank)
+        * retrieval_priority(record),
         terms=frozenset(
             term for term in _TERMS.findall(record.content.lower()) if term not in _STOPWORDS
         ),

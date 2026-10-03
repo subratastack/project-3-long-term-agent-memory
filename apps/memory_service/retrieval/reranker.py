@@ -31,11 +31,14 @@ from __future__ import annotations
 
 import dataclasses
 import logging
+import math
 import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
+from apps.memory_service.consolidation.forgetting import retrieval_priority
+from apps.memory_service.domain.enums import MemoryStatus
 from apps.memory_service.embeddings.cross_encoder import CrossEncoderModel
 
 if TYPE_CHECKING:
@@ -70,7 +73,7 @@ class Reranker(Protocol):
 
 
 class CrossEncoderReranker:
-    """Reranks fused hits by CrossEncoder relevance score.
+    """Reranks fused hits by CrossEncoder score plus log lifecycle priority.
 
     Only the first `max_candidates` hits are scored; any beyond that are
     appended afterwards, unscored, in their original fused order. Ties in
@@ -106,6 +109,11 @@ class CrossEncoderReranker:
                 [<"dark_mode is now disabled", rerank_score=9.19>,
                  <"dark_mode is now enabled", rerank_score=5.73>]
         """
+        hits = [
+            hit
+            for hit in hits
+            if hit.memory.status not in (MemoryStatus.TOMBSTONE, MemoryStatus.QUARANTINED)
+        ]
         head = list(hits[: self._max_candidates])
         tail = list(hits[self._max_candidates :])
         if not head:
@@ -121,7 +129,10 @@ class CrossEncoderReranker:
             dataclasses.replace(hit, rerank_score=score)
             for hit, score in zip(head, scores, strict=True)
         ]
-        rescored.sort(key=lambda hit: hit.rerank_score or 0.0, reverse=True)
+        rescored.sort(
+            key=lambda hit: (hit.rerank_score or 0.0) + math.log(retrieval_priority(hit.memory)),
+            reverse=True,
+        )
         return rescored + tail
 
 
@@ -178,7 +189,11 @@ def apply_reranker(
              RerankReport(candidates_in=2, candidates_reranked=0, latency_ms=0.4,
                           fallback_reason="reranker raised RuntimeError: CUDA out of memory"))
     """
-    original = list(hits)
+    original = [
+        hit
+        for hit in hits
+        if hit.memory.status not in (MemoryStatus.TOMBSTONE, MemoryStatus.QUARANTINED)
+    ]
     started = time.perf_counter()
 
     def _fallback(
@@ -209,6 +224,10 @@ def apply_reranker(
         hit.memory.memory_id for hit in head
     ):
         return _fallback("reranker output was not a reordering of its input")
+
+    originals = {hit.memory.memory_id: hit.memory for hit in head}
+    if any(hit.memory != originals[hit.memory.memory_id] for hit in reordered):
+        return _fallback("reranker altered authoritative memory")
 
     report = RerankReport(
         candidates_in=len(original),

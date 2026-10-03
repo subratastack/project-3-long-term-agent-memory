@@ -29,17 +29,20 @@ visible.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from uuid import UUID
 
+from apps.memory_service.consolidation.forgetting import retrieval_priority
 from apps.memory_service.domain.models import MemoryRecord
 from apps.memory_service.embeddings.base import EmbeddingModel
 from apps.memory_service.persistence.unit_of_work import UnitOfWork
+from apps.memory_service.retrieval.filters import record_matches_filters, resolve_filters
 from apps.memory_service.retrieval.lexical import LexicalSearchHit, lexical_search
 from apps.memory_service.retrieval.query_model import RetrievalQuery
 from apps.memory_service.retrieval.reranker import Reranker, RerankReport, apply_reranker
 from apps.memory_service.retrieval.semantic import SemanticSearchHit, semantic_search
 from apps.memory_service.retrieval.temporal import TemporalReport, apply_temporal_resolution
+from apps.memory_service.security.tenant_scope import TenantScope
 
 # The "k" in RRF's `1 / (k + rank)`: a smoothing constant added to every rank
 # before taking the reciprocal, which controls how much *more* a top rank is
@@ -166,7 +169,9 @@ def hybrid_search_with_report(
            recorded contradiction -- regardless of its score. This runs
            before truncation so a removed stale fact leaves room for the
            next valid one instead of shrinking the answer.
-        6. Truncate to `query.limit`.
+        6. Drop any hit outside the query's tenant (`TenantScope.filter_hits`)
+           -- a final guard that should never fire, since every stage above
+           is already tenant-scoped -- and truncate to `query.limit`.
 
     Example:
         Input:
@@ -204,12 +209,29 @@ def hybrid_search_with_report(
     fused = _fuse_rrf(lexical_hits, semantic_hits, rrf_k=rrf_k)
     fused.sort(key=lambda hit: hit.fused_score, reverse=True)
     candidates = fused[:candidate_limit]
+    # Re-fetch immediately before any text reaches a reranker.
+    filters = resolve_filters(query)
+    fresh = []
+    for hit in candidates:
+        record = uow.records.get(query.tenant_id, hit.memory.memory_id)
+        if record is not None and record_matches_filters(record, filters):
+            fresh.append(replace(hit, memory=record))
+    candidates = fresh
 
     rerank_report: RerankReport | None = None
     if reranker is not None:
         candidates, rerank_report = apply_reranker(reranker, query.query_text, candidates)
 
-    candidates, temporal_report = apply_temporal_resolution(uow, query, candidates)
+    # A deletion may commit while a slow reranker is running.
+    fresh = []
+    for hit in candidates:
+        record = uow.records.get(query.tenant_id, hit.memory.memory_id)
+        if record is not None and record_matches_filters(record, filters):
+            fresh.append(replace(hit, memory=record))
+    candidates, temporal_report = apply_temporal_resolution(uow, query, fresh)
+    # Every stage above is already tenant-scoped; this is the last line of
+    # defense if one of them ever regresses.
+    candidates = TenantScope(query.tenant_id).filter_hits(candidates)
 
     return HybridSearchResult(
         hits=candidates[: query.limit],
@@ -272,7 +294,7 @@ def _fuse_rrf(
     return [
         HybridSearchHit(
             memory=records[memory_id],
-            fused_score=score,
+            fused_score=score * retrieval_priority(records[memory_id]),
             lexical_rank=lexical_ranks.get(memory_id),
             semantic_rank=semantic_ranks.get(memory_id),
         )

@@ -9,6 +9,8 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
+import pytest
+
 from apps.memory_service.domain.enums import MemoryStatus, MemoryType, SourceType, TrustLevel
 from apps.memory_service.domain.models import (
     MemoryEvent,
@@ -160,7 +162,11 @@ def test_quarantined_superseded_expired_and_tombstoned_records_never_appear(
             )
             uow.create_event(event)
             uow.create_memory(memory)
-            _index(uow, memory)
+            if status == MemoryStatus.TOMBSTONE:
+                with pytest.raises(LookupError):
+                    _index(uow, memory)
+            else:
+                _index(uow, memory)
         uow.commit()
 
     query = RetrievalQuery(tenant_id=tenant_id, query_text="pool exhaustion", limit=10)

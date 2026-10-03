@@ -73,11 +73,18 @@ any time             4. POST /tenants/{id}/retrieve        → ranked answers
   stays pending, so calling it again retries exactly the failures.
 - **Index after every ingest.** It is always safe to repeat -- memories that
   are already indexed are skipped -- so when in doubt, run it.
-- **Only `accept`ed memories are searchable.** `quarantine` stores a row that
-  retrieval never returns; `reject` and `rejected_before_policy` store nothing
-  (see [`/ingest` outcomes](#post-tenantstenant_ideventsevent_idingest)).
-- **A newer fact does not replace an older one yet.** Supersession is not
-  detected at ingestion, so both stay active and both can be returned.
+- **Only `accept`ed (or `supersede`d-in) memories are searchable.**
+  `quarantine` stores a row that retrieval never returns; `reject` and
+  `rejected_before_policy` store only an audit decision (see
+  [`/ingest` outcomes](#post-tenantstenant_ideventsevent_idingest)).
+- **A newer fact replaces an older one only on stronger evidence.** When a
+  proposal states a different value for an attribute an active fact already
+  holds (for example "The request timeout is 5 seconds."), newer,
+  at-least-as-trusted evidence that is not tool output or an unverified
+  model claim supersedes the old fact; older evidence is rejected as stale;
+  anything else is quarantined. Claims worded with different attribute names
+  are not recognized as the same fact, so both can stay active. See
+  [Trust and poisoning](trust-and-poisoning.md#stale-facts).
 
 ### The whole sequence as one script
 
@@ -153,7 +160,7 @@ docker compose exec -T postgres psql -U agent_memory -d agent_memory -c "
 | What you see | Meaning | Fix |
 | --- | --- | --- |
 | `events` > 0, `decisions` = 0 | Events were stored but never ingested. | Step 2 with no payload. |
-| `decisions` > 0, `memories` = 0 | Everything was rejected by write policy. | Read `reason_codes` in the ingest response. |
+| `decisions` > 0, `memories` = 0 | Everything was rejected, by write policy or before it. | Read `reason_codes` in the ingest response. |
 | `memories` > `indexed` | New memories not indexed yet (or quarantined, which is never indexed). | Step 3. |
 | All equal, retrieve still empty | The question does not match the stored content. | Try `"rerank": false` and a closer wording; check `pipeline.temporal.excluded`. |
 
@@ -372,10 +379,10 @@ Each entry in `outcomes`:
 
 | Field | Type | Notes |
 | --- | --- | --- |
-| `status` | string | One of `accept`, `quarantine`, `reject` (reached write policy), or `rejected_before_policy` (the extractor's proposal had no usable evidence and never reached write policy). |
-| `reason_codes` | array of strings | e.g. `TRUSTED_SEMANTIC_CLAIM`, `LOW_TRUST_EPISODIC_EVIDENCE`, `SAFETY_POLICY_TAMPERING`, `INSUFFICIENT_SUPPORTING_EPISODES`, `NO_SOURCE_EVENTS`. See `ingestion/write_policy.py` and `ingestion/normalizer.py` for the full list. |
+| `status` | string | One of `accept`, `supersede`, `quarantine`, `reject` (reached write policy), or `rejected_before_policy` (the extractor's proposal had no usable evidence and never reached write policy; it is still recorded as a `reject` audit decision). |
+| `reason_codes` | array of strings | At least one, always. e.g. `TRUSTED_SEMANTIC_CLAIM`, `LOW_TRUST_EPISODIC_EVIDENCE`, `SAFETY_POLICY_TAMPERING`, `PROMPT_INJECTION_IN_TOOL_OUTPUT`, `UNVERIFIED_MODEL_CLAIM`, `STALE_FACT_CLAIMED_AS_CURRENT`, `INSUFFICIENT_SUPPORTING_EPISODES`, `NO_SOURCE_EVENTS`. A held-back candidate lists every reason it was held back, most severe first. See [Trust and poisoning](trust-and-poisoning.md#reason-codes) for the full list. |
 | `explanation` | string or `null` | Human-readable rationale. |
-| `accepted_memory_id` | UUID or `null` | Set only when `status` is `accept` (or `quarantine`, which still persists a row) -- see `ingestion/service.py`. `null` for `reject` and `rejected_before_policy`. |
+| `accepted_memory_id` | UUID or `null` | Set when `status` is `accept`, `supersede`, or `quarantine` (which still persists a row) -- see `ingestion/service.py`. `null` for `reject` and `rejected_before_policy`. |
 
 Example -- an accepted semantic memory:
 
@@ -599,19 +606,19 @@ Each entry in `provenance`:
       "source_type": "configuration",
       "source_reference": "cfg-1",
       "observed_at": "2026-09-26T03:57:06.351221Z",
-      "trust_level": "medium",
+      "trust_level": "system",
       "excerpt": null
     }
   ],
   "temporal_validity": { "valid_from": "2026-09-26T03:57:16.388372Z", "valid_to": null },
   "memory_type": "semantic",
   "subject_keys": ["request_timeout"],
-  "trust_level": "medium",
+  "trust_level": "system",
   "metadata": {},
   "status": "active",
   "created_at": "2026-09-26T09:27:16.388395Z",
   "updated_at": "2026-09-26T09:27:16.388397Z",
-  "policy_version": "1.0",
+  "policy_version": "1.1",
   "embedding": null,
   "embedding_model_version": null,
   "index_status": "pending"
@@ -1007,7 +1014,7 @@ For your own data, follow the [end-to-end sequence](#end-to-end-sequence).
 | `MemoryStatus` | `active`, `quarantined`, `superseded`, `expired`, `tombstone` |
 | `TrustLevel` | `untrusted`, `low`, `medium`, `high`, `system` |
 | `IndexStatus` | `pending`, `indexed`, `failed` |
-| `status` in an `/ingest` outcome | `accept`, `quarantine`, `reject`, `rejected_before_policy` |
+| `status` in an `/ingest` outcome | `accept`, `supersede`, `quarantine`, `reject`, `rejected_before_policy` |
 | `ExclusionReason` (`/retrieve` `excluded[].reason`) | `not_eligible`, `not_in_effect`, `superseded`, `lost_conflict`, `unresolved_conflict` |
 | `ConflictState` (`/retrieve` `conflicts[].state`) | `resolved_by_trust`, `unresolved` |
 

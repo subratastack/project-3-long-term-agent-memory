@@ -53,9 +53,9 @@ def semantic_search(
            the revalidation step described in the module docstring, applied
            to data actually read back from PostgreSQL rather than trusted
            from step 3.
-        5. Return the surviving matches as `SemanticSearchHit`s, nearest
-           first (already ordered by `find_nearest`; revalidation only ever
-           removes entries, never reorders them).
+        5. Return the surviving matches in the priority-adjusted order from
+           `find_nearest`, retaining raw cosine distance on each hit.
+           Revalidation only removes entries; it never reorders them.
 
     Example:
         Input:

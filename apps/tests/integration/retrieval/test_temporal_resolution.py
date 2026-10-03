@@ -100,6 +100,8 @@ def _build(
 
 
 def _index(uow: UnitOfWork, record: MemoryRecord) -> None:
+    if record.status == MemoryStatus.TOMBSTONE:
+        return
     uow.vectors.set_embedding(
         record.tenant_id,
         record.memory_id,
@@ -125,6 +127,7 @@ def _supersede(
         candidate_id=uuid4(),
         decision=WriteDecision.SUPERSEDE,
         policy_version="1.0",
+        reason_codes=["NEWER_FACT_SUPERSEDES_CURRENT"],
         accepted_memory_id=replacement.memory_id,
         superseded_memory_id=old.memory_id,
     )

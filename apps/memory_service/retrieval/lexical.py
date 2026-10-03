@@ -27,6 +27,8 @@ from dataclasses import dataclass
 
 from sqlalchemy import func, or_, select
 
+from apps.memory_service.consolidation.forgetting import priority_expression
+from apps.memory_service.domain.enums import MemoryStatus
 from apps.memory_service.domain.models import MemoryRecord
 from apps.memory_service.persistence.models import FTS_LANGUAGE, MemoryRecordRow
 from apps.memory_service.persistence.unit_of_work import UnitOfWork
@@ -65,7 +67,7 @@ def lexical_search(uow: UnitOfWork, query: RetrievalQuery) -> list[LexicalSearch
            select every `memory_records` row whose `search_vector` matches
            it, applying the same tenant/status/trust/type/time predicates
            as `vector_repository.find_nearest`, ordered by
-           `ts_rank_cd(search_vector, query)` descending and capped at
+           `ts_rank_cd(search_vector, query) * lifecycle_priority` descending and capped at
            `query.limit`.
         4. For each matching row, re-fetch the full record via
            `uow.records.get` and re-check `record_matches_filters` -- the
@@ -94,6 +96,7 @@ def lexical_search(uow: UnitOfWork, query: RetrievalQuery) -> list[LexicalSearch
             MemoryRecordRow.tenant_id == filters.tenant_id,
             MemoryRecordRow.search_vector.op("@@")(tsquery),
             MemoryRecordRow.status.in_(filters.allowed_statuses),
+            MemoryRecordRow.status != MemoryStatus.TOMBSTONE,
             MemoryRecordRow.trust_level.in_(filters.allowed_trust_levels),
             MemoryRecordRow.valid_from <= filters.effective_at,
             or_(
@@ -101,7 +104,7 @@ def lexical_search(uow: UnitOfWork, query: RetrievalQuery) -> list[LexicalSearch
                 MemoryRecordRow.valid_to >= filters.effective_at,
             ),
         )
-        .order_by(rank.desc())
+        .order_by((rank * priority_expression()).desc(), MemoryRecordRow.memory_id)
         .limit(query.limit)
     )
     if filters.memory_types is not None:

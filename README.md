@@ -97,6 +97,7 @@ Models may download on first use and run locally afterward.
 | Reranking scores a bounded shortlist and falls back on handled errors | Improve ordering while limiting the number of scored pairs | [Reranker](apps/memory_service/retrieval/reranker.py), [fallback and cap tests](apps/tests/unit/retrieval/test_reranker.py) |
 | Context selection considers overlap and token cost | The highest-ranked notes may repeat one another or consume too much space | [Context packer](apps/memory_service/retrieval/context_packer.py), [budget and selection tests](apps/tests/unit/retrieval/test_context_packer.py) |
 | Exact vector search precedes approximate indexing | Establish a measurable quality baseline before trading accuracy for speed | [Retrieval ADR](docs/adr/003-hybrid-retrieval.md), [search-quality tests](apps/tests/integration/retrieval/test_exact_search_quality.py) |
+| Poisoning defenses are measured against an attack corpus | Rules that only look right cannot show how much poison gets through | [Security modules](apps/memory_service/security), [adversarial tests](tests/adversarial), [trust and poisoning guide](docs/trust-and-poisoning.md) |
 
 The API exposes intermediate evidence: `/retrieve` returns ranking signals,
 reranking fallback information, and temporal exclusions; `/context` returns
@@ -106,9 +107,9 @@ unexpected results traceable to a particular stage.
 ## What has been measured
 
 These are **previously recorded development results**, not production-scale
-claims or a fresh benchmark run. Each comparison uses the same candidate
-pool for both strategies. Full methodology and caveats live in the linked
-guides.
+claims or a fresh benchmark run. Each retrieval comparison uses the same
+candidate pool for both strategies. Full methodology and caveats live in the
+linked guides.
 
 ### Retrieval quality and reranking cost
 
@@ -145,15 +146,38 @@ for packing. Without an absolute relevance threshold, the packer can use
 remaining space on off-topic notes. See the
 [full context-packing results](docs/context-packing.md#5-measurements-does-this-help).
 
+### Poisoning and tenant isolation
+
+Corpus: 39 labeled attacks in eight families (safety overrides, tool-output
+injection, secret persistence, model claims, hallucinated extraction,
+poisoned procedures, stale facts, cross-tenant evidence) and 14 benign
+controls, run through extraction, normalization, and write policy. **Poison
+acceptance** is the share of attacks that became active memory; **benign
+acceptance** shows the policy is not simply refusing everything.
+
+| Measure | Result (2026-10-03) |
+| --- | ---: |
+| Poison acceptance | 0 / 39 (0%): 16 quarantined, 23 rejected |
+| Benign acceptance | 14 / 14 (100%), including two legitimate supersessions |
+| Decisions without a reason code | 0 |
+| Tenant B results belonging to tenant A, across every read path and the API | 0 |
+
+The results were identical in memory and through PostgreSQL. The corpus was
+written together with the defenses, so 0% shows that the known families are
+handled, not that novel phrasings will be caught. See the
+[poisoning measurements and limitations](docs/trust-and-poisoning.md#5-measurements-how-much-poison-gets-through).
+
 After local setup, reproduce the evaluations with:
 
 ```bash
 uv run python -m apps.benchmark.run_retrieval_eval
 uv run python -m apps.benchmark.run_context_packing_eval
+uv run python -m apps.benchmark.run_poisoning_eval   # add --database for PostgreSQL
 ```
 
-Both require PostgreSQL and the relevant local models. Longitudinal and
-poisoning evaluation runners are planned; they are not available commands.
+The first two require PostgreSQL and the relevant local models; the
+poisoning runner needs neither unless given `--database`. A longitudinal
+evaluation runner is planned; it is not an available command.
 
 ## Quick start
 
@@ -256,19 +280,21 @@ and rejection examples.
 
 | Area | Implemented | Remaining work |
 | --- | --- | --- |
-| Storage and governance | Tenant-scoped records, provenance, trust, audit decisions, lifecycle statuses | Operational lifecycle automation |
-| Ingestion | Ollama extraction, deterministic classification, normalization, verification, write policy | Automatic detection of contradictions and replacements |
+| Storage and governance | Tenant-scoped records, provenance, trust, audited expiry/tombstones, decay, compaction, maintenance CLI | Deployment scheduling, retention-specific purge |
+| Ingestion | Ollama extraction, deterministic classification, normalization, verification, write policy with poisoning, model-claim, procedure-evidence, and stale-fact checks; supersession of recognized fact claims | Contradiction links, broader fact matching, quarantine review tooling |
 | Retrieval | Full-text and exact vector search, rank fusion, bounded optional reranking | Approximate indexes when justified by evaluation |
 | Temporal behavior | Historical queries, recorded supersession, trust-based conflict resolution | Future-dated replacement edge cases; optional return of unresolved claims in hits |
 | Context packing | Duplicate removal, overlap-aware selection, budget accounting, skip reports | Calibrated relevance floor and improved subject-key quality |
 | Consolidation | Deterministic episode clustering, bounded candidates, evidence thresholds, policy-governed persistence | Scheduled worker, summary refresh/supersession, global deduplication |
 | Agent integration | Development HTTP API and Python pipeline entry points | LangGraph runtime integration and working-memory lifecycle |
-| Evaluation | Retrieval and context-packing comparisons; unit and integration tests | Larger datasets, longitudinal and poisoning evaluation runners |
+| Evaluation | Retrieval and context-packing comparisons; poisoning corpus and runner; adversarial tenant-isolation suite; unit and integration tests | Larger datasets, longitudinal evaluation runner |
 
 Further limitations: provenance verification checks references and metadata,
-not whether an extracted sentence is logically supported. Injection checks
-use fixed phrase patterns. Automatic consolidation and forgetting/expiry
-workers are not implemented. See [temporal limitations](docs/temporal-resolution.md#known-limitations)
+not whether an extracted sentence is logically supported (only numbers are
+checked against the evidence). Injection and tampering checks use fixed
+patterns; see [poisoning limitations](docs/trust-and-poisoning.md#6-limitations-to-keep-in-mind). Consolidation has a Python entry point;
+[forgetting maintenance](docs/forgetting.md) has a schedulable CLI. Deployment
+schedules and hard-delete retention policies are not installed automatically. See [temporal limitations](docs/temporal-resolution.md#known-limitations)
 and [packing limitations](docs/context-packing.md#6-limitations-to-keep-in-mind)
 for the precise boundaries.
 
@@ -276,7 +302,8 @@ for the precise boundaries.
 
 ```bash
 uv run pytest apps/tests/unit tests/unit/consolidation
-uv run pytest apps/tests/integration
+uv run pytest apps/tests/integration tests/integration
+uv run pytest tests/adversarial
 uv run ruff check .
 uv run mypy apps
 ```
@@ -290,14 +317,17 @@ real-model tests also need the relevant models.
 The tests include stale facts outranking current ones, conflicts whose other
 side was not retrieved, tenant isolation, rejected evidence, reranker
 fallback, and token counters that count joined text differently from its
-parts. See [the test suite](apps/tests) and
+parts. The [adversarial suite](tests/adversarial) attacks write policy with
+poisoned, stale, and cross-tenant input. See [the test suite](apps/tests) and
 [database operations](docs/database-operations.md) for local inspection.
 
 ## Explore the design
 
 | Read next | What it explains |
 | --- | --- |
+| [Memory attributes and lifecycle](docs/memory-attributes-and-lifecycle.md) | Hub-and-spoke view of a record and a state-machine view of its lifecycle |
 | [Ingestion](docs/ingestion-flow.md) | How evidence becomes an accepted, quarantined, or rejected memory |
+| [Trust and poisoning](docs/trust-and-poisoning.md) | Evidence trust, poisoning checks, stale facts, tenant scope, and how they are measured |
 | [Retrieval](docs/retrieval-flow.md) | Word and meaning search, fusion, filters, and reports |
 | [Reranking](docs/reranking.md) | Joint question–memory scoring, bounds, and fallback |
 | [Temporal resolution](docs/temporal-resolution.md) | Historical validity, supersession, and contradictions |
@@ -306,6 +336,7 @@ parts. See [the test suite](apps/tests) and
 | [Consolidation summaries](docs/consolidation-summaries.md) | Bounded candidates with complete supporting evidence |
 | [Consolidation promotion](docs/consolidation-promotion.md) | Decide whether repetition supports an observation or procedure |
 | [Consolidation service](docs/consolidation-service.md) | Write policy, atomic persistence, and repeat-run deduplication |
+| [Forgetting](docs/forgetting.md) | Expiry, decay, tombstones, compaction, and scheduled maintenance |
 | [API reference](docs/api-reference.md) | Request fields, endpoints, and response examples |
 | [Architecture](ARCHITECTURE.md) | System boundaries and design contracts |
 | [Architecture decision records](docs/adr) | The reasoning and tradeoffs behind the design |

@@ -330,3 +330,13 @@ The tests exercise the individual stages and the combined pipeline:
 For design decisions, see [Architecture](../ARCHITECTURE.md),
 [ADR-003: hybrid retrieval](adr/003-hybrid-retrieval.md), and
 [ADR-004: temporal conflicts](adr/004-temporal-conflict-semantics.md).
+
+## Lifecycle priority after Phase 10
+
+[Forgetting and decay](forgetting.md) store a bounded priority multiplier.
+Lexical and semantic search apply it before their candidate limits; fusion,
+the built-in reranker, and context packing also account for it. Scores shown
+in the earlier walkthrough assume the default multiplier of 1. Raw lexical,
+cosine-distance, and model scores remain available, so adjusted result order
+may differ from sorting those raw scores alone. Expired memories remain
+historically eligible within their validity window; tombstones never do.

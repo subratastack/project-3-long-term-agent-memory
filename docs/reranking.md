@@ -302,3 +302,13 @@ under a token budget belongs to [Context packing](context-packing.md).
 
 For the design rationale, see
 [ADR-003: hybrid retrieval](adr/003-hybrid-retrieval.md).
+
+## Lifecycle priority
+
+[Forgetting](forgetting.md) can lower a candidate's stored priority. The built-in
+CrossEncoder orders by raw score plus `ln(priority)`, preserving the raw score
+on the returned hit. With the default priority 1 this adds zero; the earlier
+examples and measurements retain their meaning. Tombstones and quarantined
+records are rejected even when passed directly to the reranking wrapper.
+The database pipeline revalidates records around inference so a deletion during
+reranking cannot proceed into context construction.

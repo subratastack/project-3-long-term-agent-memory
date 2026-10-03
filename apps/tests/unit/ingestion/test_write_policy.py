@@ -127,8 +127,32 @@ class TestWritePolicy(unittest.TestCase):
         self.assertEqual(decision.decision, WriteDecision.REJECT)
         self.assertIn("INSUFFICIENT_SUPPORTING_EPISODES", decision.reason_codes)
 
-    def test_procedural_memory_with_explicit_approval_bypasses_episode_count(self) -> None:
-        event = _make_event(source_type=SourceType.AGENT_ACTION, source_reference="run-1")
+    def test_procedural_memory_with_authorized_approval_bypasses_episode_count(self) -> None:
+        # Approval is evidence: a configuration event that records who approved it.
+        event = _make_event(
+            source_type=SourceType.CONFIGURATION,
+            source_reference="change-1",
+            content="Approved runbook: always retry failed requests exactly once.",
+            metadata={"approved_by": "ops-lead"},
+        )
+        provenance = _make_provenance(event, trust_level=TrustLevel.SYSTEM)
+        candidate = _make_candidate(
+            [provenance],
+            content="Always retry failed requests exactly once.",
+            memory_type=MemoryType.PROCEDURAL,
+        )
+
+        decision = evaluate_write_policy(candidate, {event.event_id: event})
+
+        self.assertEqual(decision.decision, WriteDecision.ACCEPT)
+
+    def test_approval_claimed_in_candidate_metadata_is_not_an_approval(self) -> None:
+        # Candidate metadata comes from the extractor, so it cannot approve anything.
+        event = _make_event(
+            source_type=SourceType.AGENT_ACTION,
+            source_reference="run-1",
+            metadata={"runtime_verified": True},
+        )
         provenance = _make_provenance(event, trust_level=TrustLevel.SYSTEM)
         candidate = _make_candidate(
             [provenance],
@@ -139,7 +163,9 @@ class TestWritePolicy(unittest.TestCase):
 
         decision = evaluate_write_policy(candidate, {event.event_id: event})
 
-        self.assertEqual(decision.decision, WriteDecision.ACCEPT)
+        self.assertEqual(decision.decision, WriteDecision.REJECT)
+        self.assertIn("INSUFFICIENT_SUPPORTING_EPISODES", decision.reason_codes)
+        self.assertIn("UNAUTHORIZED_APPROVAL_CLAIM", decision.reason_codes)
 
     def test_candidate_referencing_another_tenants_event_is_rejected(self) -> None:
         foreign_event = _make_event(tenant_id=OTHER_TENANT_ID)

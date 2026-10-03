@@ -56,6 +56,7 @@ from apps.memory_service.domain.enums import ConflictType
 from apps.memory_service.domain.models import MemoryRecord, MemoryRelation
 from apps.memory_service.retrieval.filters import RetrievalFilters, resolve_filters
 from apps.memory_service.retrieval.query_model import RetrievalQuery
+from apps.memory_service.security.tenant_scope import TenantScope
 
 if TYPE_CHECKING:
     from apps.memory_service.persistence.unit_of_work import UnitOfWork
@@ -121,7 +122,8 @@ def apply_temporal_resolution[HitT: _HasMemory](
     How it works:
         1. Resolve the query's filters (the same `effective_at`, tenant,
            and allowed statuses/trust/types retrieval used).
-        2. Load every relation touching a candidate, in one query.
+        2. Load every relation touching a candidate, in one query (keeping
+           only the query tenant's relations, `TenantScope.filter_relations`).
         3. Load every relation touching the *other* side of those edges,
            in one more query -- needed to tell whether that other memory is
            itself superseded (a contradiction with a retired fact is no
@@ -144,12 +146,20 @@ def apply_temporal_resolution[HitT: _HasMemory](
                             conflicts=()))
     """
     filters = resolve_filters(query)
+    scope = TenantScope(filters.tenant_id)
     records: dict[UUID, MemoryRecord] = {hit.memory.memory_id: hit.memory for hit in hits}
 
-    relations = _unique(uow.relations.list_for_memories(filters.tenant_id, list(records)))
+    relations = _unique(
+        scope.filter_relations(uow.relations.list_for_memories(filters.tenant_id, list(records)))
+    )
     neighbour_ids = _endpoints(relations) - records.keys()
     relations = _unique(
-        [*relations, *uow.relations.list_for_memories(filters.tenant_id, neighbour_ids)]
+        [
+            *relations,
+            *scope.filter_relations(
+                uow.relations.list_for_memories(filters.tenant_id, neighbour_ids)
+            ),
+        ]
     )
 
     for memory_id in _endpoints(relations) - records.keys():

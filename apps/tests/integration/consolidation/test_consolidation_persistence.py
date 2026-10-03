@@ -69,5 +69,9 @@ def test_consolidation_persists_all_support_and_no_duplicates(uow_factory):
             str(m.memory_id) for m in episodes
         }
         for episode in episodes:
-            assert uow.get_memory(episode.memory_id, tenant_id) == episode
+            stored = uow.get_memory(episode.memory_id, tenant_id)
+            assert stored.content == episode.content
+            assert stored.provenance == episode.provenance
+            assert stored.status == episode.status
+            assert stored.metadata["forgetting"]["priority"] == 0.25
         assert len(uow.list_active_memories(tenant_id)) == 4

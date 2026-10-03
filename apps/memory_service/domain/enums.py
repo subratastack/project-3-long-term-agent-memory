@@ -90,7 +90,10 @@ class SourceType(StrEnum):
     - USER_MESSAGE: raw text typed by a human user.
     - TOOL_OUTPUT: whatever a called tool or external API returned.
     - SYSTEM_EVENT: an internal platform trigger or lifecycle notice.
-    - AGENT_ACTION: something the agent itself planned or executed.
+    - AGENT_ACTION: something the agent itself planned or executed. It
+      counts as execution evidence only when the runtime marks the event
+      `metadata["runtime_verified"] = True`; otherwise it is the model's own
+      claim and is capped at LOW trust (see `security.trust`).
     - CONFIGURATION: an explicit, administrator-set policy or setting.
     """
 

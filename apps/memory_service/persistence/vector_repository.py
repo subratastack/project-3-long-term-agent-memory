@@ -29,7 +29,8 @@ from sqlalchemy import or_, select, update
 from sqlalchemy.engine import CursorResult
 from sqlalchemy.orm import Session
 
-from apps.memory_service.domain.enums import IndexStatus
+from apps.memory_service.consolidation.forgetting import priority_expression
+from apps.memory_service.domain.enums import IndexStatus, MemoryStatus
 from apps.memory_service.persistence.models import MemoryRecordRow
 from apps.memory_service.retrieval.filters import RetrievalFilters
 
@@ -68,7 +69,7 @@ class VectorRecordRepository:
             setting `embedding`, `embedding_model_version`, and
             `index_status=INDEXED` together, so a record is never left with
             an embedding but a stale `index_status`, or vice versa. If no row
-            matched (wrong tenant, or the memory does not exist), raises
+            matched (wrong tenant, missing memory, or tombstone), raises
             `LookupError` rather than silently doing nothing.
 
         Example:
@@ -84,7 +85,11 @@ class VectorRecordRepository:
         """
         stmt = (
             update(MemoryRecordRow)
-            .where(MemoryRecordRow.tenant_id == tenant_id, MemoryRecordRow.memory_id == memory_id)
+            .where(
+                MemoryRecordRow.tenant_id == tenant_id,
+                MemoryRecordRow.memory_id == memory_id,
+                MemoryRecordRow.status != MemoryStatus.TOMBSTONE,
+            )
             .values(
                 embedding=list(embedding),
                 embedding_model_version=model_version,
@@ -108,7 +113,11 @@ class VectorRecordRepository:
         """
         stmt = (
             update(MemoryRecordRow)
-            .where(MemoryRecordRow.tenant_id == tenant_id, MemoryRecordRow.memory_id == memory_id)
+            .where(
+                MemoryRecordRow.tenant_id == tenant_id,
+                MemoryRecordRow.memory_id == memory_id,
+                MemoryRecordRow.status != MemoryStatus.TOMBSTONE,
+            )
             .values(index_status=IndexStatus.FAILED)
         )
         result = cast(CursorResult[None], self._session.execute(stmt))
@@ -135,9 +144,9 @@ class VectorRecordRepository:
                within the record's `[valid_from, valid_to)` window -- every
                one of ADR-003's "hard constraints" is enforced in the same
                query as the similarity search, not after it.
-            3. Rows are ordered by pgvector's `<=>` cosine-distance operator
-               (via `.cosine_distance`) ascending -- closest first -- and
-               capped at `limit`.
+            3. Rows are ordered by cosine distance plus (1 - lifecycle
+               priority), then capped at `limit`. The returned distance is
+               the raw value; the penalty affects ordering only.
             4. Only `memory_id` and the computed `distance` are selected;
                callers must re-fetch the full record (see the module
                docstring).
@@ -160,6 +169,7 @@ class VectorRecordRepository:
             .where(
                 MemoryRecordRow.tenant_id == filters.tenant_id,
                 MemoryRecordRow.index_status == IndexStatus.INDEXED,
+                MemoryRecordRow.status != MemoryStatus.TOMBSTONE,
                 MemoryRecordRow.embedding.is_not(None),
                 MemoryRecordRow.status.in_(filters.allowed_statuses),
                 MemoryRecordRow.trust_level.in_(filters.allowed_trust_levels),
@@ -169,7 +179,7 @@ class VectorRecordRepository:
                     MemoryRecordRow.valid_to >= filters.effective_at,
                 ),
             )
-            .order_by(distance)
+            .order_by(distance + (1.0 - priority_expression()), MemoryRecordRow.memory_id)
             .limit(limit)
         )
         if filters.memory_types is not None:

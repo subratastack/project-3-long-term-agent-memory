@@ -193,9 +193,13 @@ Code: `apps/memory_service/retrieval/context_packer.py`.
 Each candidate gets a base value from its position and its type:
 
 ```text
-base = TYPE_WEIGHTS[type] / (RELEVANCE_RANK_K + rank)      RELEVANCE_RANK_K = 2
+base = TYPE_WEIGHTS[type] / (RELEVANCE_RANK_K + rank) * priority      RELEVANCE_RANK_K = 2
 TYPE_WEIGHTS: semantic 1.0, procedural 1.0, episodic 0.8
 ```
+
+Here `priority` is the stored lifecycle multiplier (1 by default).
+[Decay and compaction](forgetting.md) can lower it to favor other memories.
+The examples and historical benchmark below use priority 1.
 
 For example, A is episodic at rank 1, so its base value is
 `0.8 / (2 + 1) ≈ 0.267`. D is semantic at rank 4, so its base value is

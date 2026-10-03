@@ -142,6 +142,8 @@ and policy—not from model confidence alone. User attempts to alter safety
 policy, prompt injection in tool output, unverifiable model statements, and
 cross-tenant references are rejected or quarantined. Procedural promotion has
 the strictest admission rule because it can shape future agent behavior.
+[Trust and poisoning](docs/trust-and-poisoning.md) describes the rules and
+their measured results.
 
 ## Tenant isolation
 
