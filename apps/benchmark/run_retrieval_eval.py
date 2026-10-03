@@ -3,7 +3,7 @@
 Measures, for hybrid retrieval with and without reranking over the *same*
 fused candidate pool (so the reranker is the only difference):
 
-- quality: Recall@K, MRR, nDCG@K
+- quality: Precision@K, Recall@K, MRR, nDCG@K
 - cost: P50/P95 end-to-end latency, P50/P95 rerank-stage latency, and how
   many candidates were sent through the CrossEncoder per query
 
@@ -27,7 +27,13 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
-from apps.benchmark.metrics import ndcg_at_k, percentile, recall_at_k, reciprocal_rank
+from apps.benchmark.metrics import (
+    ndcg_at_k,
+    percentile,
+    precision_at_k,
+    recall_at_k,
+    reciprocal_rank,
+)
 from apps.memory_service.domain.enums import MemoryStatus, MemoryType, SourceType, TrustLevel
 from apps.memory_service.domain.models import (
     MemoryEvent,
@@ -118,6 +124,7 @@ class StrategyReport:
 
     name: str
     k: int
+    precision_at_k: float
     recall_at_k: float
     mrr: float
     ndcg_at_k: float
@@ -191,6 +198,10 @@ def evaluate_strategy(
     deterministic); latency percentiles pool every run. One untimed warm-up
     query runs first so model loading and first-call overheads are not
     counted as query latency.
+
+    Precision, recall, and MRR use grade-2 answers as binary relevance;
+    nDCG also credits grade-1 context. Precision divides by `k`, even when
+    fewer results are returned.
     """
     label_of = {memory_id: label for label, memory_id in memory_ids.items()}
 
@@ -214,6 +225,7 @@ def evaluate_strategy(
 
     run(LABELED_QUERIES[0].text)
 
+    precisions: list[float] = []
     recalls: list[float] = []
     reciprocal_ranks: list[float] = []
     ndcgs: list[float] = []
@@ -233,6 +245,7 @@ def evaluate_strategy(
             reranked_counts.append(reranked)
             fallbacks += int(fell_back)
             if attempt == 0:
+                precisions.append(precision_at_k(ranked, answers, k))
                 recalls.append(recall_at_k(ranked, answers, k))
                 reciprocal_ranks.append(reciprocal_rank(ranked, answers))
                 ndcgs.append(ndcg_at_k(ranked, labeled.grades, k))
@@ -243,6 +256,7 @@ def evaluate_strategy(
     return StrategyReport(
         name=name,
         k=k,
+        precision_at_k=_mean(precisions),
         recall_at_k=_mean(recalls),
         mrr=_mean(reciprocal_ranks),
         ndcg_at_k=_mean(ndcgs),
@@ -261,7 +275,7 @@ def format_reports(reports: list[StrategyReport]) -> str:
     """Render reports as a fixed-width table, plus per-query answer ranks."""
     k = reports[0].k
     header = (
-        f"{'strategy':<22}{f'Recall@{k}':>10}{'MRR':>8}{f'nDCG@{k}':>9}"
+        f"{'strategy':<22}{f'Precision@{k}':>13}{f'Recall@{k}':>10}{'MRR':>8}{f'nDCG@{k}':>9}"
         f"{'P50 ms':>9}{'P95 ms':>9}{'rr P50':>9}{'rr P95':>9}{'reranked':>10}{'fallbk':>8}"
     )
     lines = [header, "-" * len(header)]
@@ -270,7 +284,8 @@ def format_reports(reports: list[StrategyReport]) -> str:
         rr_p95 = f"{r.rerank_p95_ms:.1f}" if r.rerank_p95_ms is not None else "-"
         reranked = f"{r.mean_candidates_reranked:.1f}/{r.max_candidates_reranked}"
         lines.append(
-            f"{r.name:<22}{r.recall_at_k:>10.3f}{r.mrr:>8.3f}{r.ndcg_at_k:>9.3f}"
+            f"{r.name:<22}{r.precision_at_k:>13.3f}{r.recall_at_k:>10.3f}"
+            f"{r.mrr:>8.3f}{r.ndcg_at_k:>9.3f}"
             f"{r.latency_p50_ms:>9.1f}{r.latency_p95_ms:>9.1f}{rr_p50:>9}{rr_p95:>9}"
             f"{reranked:>10}{r.fallbacks:>8}"
         )

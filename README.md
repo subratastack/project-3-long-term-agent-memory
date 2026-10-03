@@ -9,8 +9,8 @@ are inspectable through provenance, write-policy audits, retrieval reports,
 and per-memory selection reasons.
 
 **Status:** under active development. The core pipelines and a development
-HTTP API are implemented; autonomous consolidation, lifecycle workers, and
-agent-runtime integration remain planned. The HTTP API is a local development
+HTTP API and LangGraph integration are implemented; scheduled consolidation
+and lifecycle workers remain planned. The HTTP API is a local development
 tool, not a production deployment surface.
 
 [See an example](#a-memory-that-changes-over-time) ·
@@ -79,7 +79,9 @@ memories need indexing before meaning-based search can find them.
 The durable memory types are **episodic** (events and observations),
 **semantic** (standing facts), and **procedural** (repeatable methods).
 Procedures have a stricter admission policy. Working memory belongs to the
-agent's current runtime; runtime integration is still planned.
+agent's current runtime. [LangGraph integration](docs/langgraph-integration.md)
+reads packed long-term memory before reasoning and learns through write policy
+after completed tool outcomes.
 
 **Implementation stack:** Python 3.12+, PostgreSQL 17 with pgvector,
 SQLAlchemy and Alembic, Pydantic, and FastAPI. Local sentence-transformers
@@ -114,16 +116,23 @@ linked guides.
 ### Retrieval quality and reranking cost
 
 Dataset: 24 memories, 16 queries with deliberately similar but incorrect
-alternatives. **MRR** rewards placing the first relevant answer early;
+alternatives. **Precision@5** is the number of distinct answer memories in
+the top five divided by five; **Recall@5** is the fraction of required
+answers found. For example, finding one required answer among five results
+gives recall 1.0 and precision 0.2. **MRR** rewards placing the first
+relevant answer early;
 **nDCG@5** measures top-five ordering against an ideal relevance order.
 Higher is better. **P50/P95** are median and 95th-percentile latency.
 
-| Strategy | MRR | nDCG@5 | Reranking P50 / P95 |
-| --- | ---: | ---: | ---: |
-| Hybrid search | 0.906 | 0.952 | — |
-| Hybrid + CrossEncoder | 0.938 | 0.964 | 7.8 / 9.6 ms |
+| Strategy | Precision@5 | Recall@5 | MRR | nDCG@5 | Reranking P50 / P95 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Hybrid search | 0.200 | 1.000 | 0.906 | 0.952 | — |
+| Hybrid + CrossEncoder | 0.200 | 1.000 | 0.938 | 0.964 | 7.8 / 9.6 ms |
 
-Both reached Recall@5 of 1.0 on this small corpus. The reranker improved two
+Precision@5 is derived from the previously recorded Recall@5 of 1.0 and
+the dataset's one grade-2 answer per query; it cannot exceed 0.2 here.
+Precision, recall, and MRR count grade-2 answers; nDCG also credits grade-1
+context. The reranker improved two
 first-answer positions and worsened one; timings depend on hardware and
 exclude the experience of a cold model load. See
 [retrieval measurements](docs/retrieval-flow.md#reranking-measured-quality-and-cost).
@@ -173,11 +182,16 @@ After local setup, reproduce the evaluations with:
 uv run python -m apps.benchmark.run_retrieval_eval
 uv run python -m apps.benchmark.run_context_packing_eval
 uv run python -m apps.benchmark.run_poisoning_eval   # add --database for PostgreSQL
+uv run python -m apps.benchmark.run_langgraph_store_eval
+uv run python -m apps.benchmark.run_longitudinal_eval
 ```
 
 The first two require PostgreSQL and the relevant local models; the
-poisoning runner needs neither unless given `--database`. A longitudinal
-evaluation runner is planned; it is not an available command.
+poisoning runner needs neither unless given `--database`. The Store comparison
+and longitudinal replay use PostgreSQL inside rollback-only transactions and
+deterministic hash embeddings, with no model download. Their measured reports
+and limits are documented in the [Store comparison](docs/langgraph-store-comparison.md)
+and [longitudinal benchmark](docs/longitudinal-benchmark.md).
 
 ## Quick start
 
@@ -286,8 +300,8 @@ and rejection examples.
 | Temporal behavior | Historical queries, recorded supersession, trust-based conflict resolution | Future-dated replacement edge cases; optional return of unresolved claims in hits |
 | Context packing | Duplicate removal, overlap-aware selection, budget accounting, skip reports | Calibrated relevance floor and improved subject-key quality |
 | Consolidation | Deterministic episode clustering, bounded candidates, evidence thresholds, policy-governed persistence | Scheduled worker, summary refresh/supersession, global deduplication |
-| Agent integration | Development HTTP API and Python pipeline entry points | LangGraph runtime integration and working-memory lifecycle |
-| Evaluation | Retrieval and context-packing comparisons; poisoning corpus and runner; adversarial tenant-isolation suite; unit and integration tests | Larger datasets, longitudinal evaluation runner |
+| Agent integration | Development HTTP API, Python pipeline entry points, LangGraph read-before-reason and governed outcome learning, usefulness feedback | Working-memory lifecycle, replay deduplication |
+| Evaluation | Retrieval/context-packing comparisons; poisoning corpus; isolated LangGraph Store comparison; seven-session longitudinal replay with a no-memory control; unit, integration and adversarial tests | Larger datasets, real-model longitudinal task trials |
 
 Further limitations: provenance verification checks references and metadata,
 not whether an extracted sentence is logically supported (only numbers are
@@ -301,11 +315,11 @@ for the precise boundaries.
 ## Development and validation
 
 ```bash
-uv run pytest apps/tests/unit tests/unit/consolidation
+uv run pytest apps/tests/unit tests/unit
 uv run pytest apps/tests/integration tests/integration
 uv run pytest tests/adversarial
 uv run ruff check .
-uv run mypy apps
+uv run mypy apps integrations
 ```
 
 Integration tests use a separate database by default (`agent_memory_test`
@@ -332,6 +346,9 @@ poisoned, stale, and cross-tenant input. See [the test suite](apps/tests) and
 | [Reranking](docs/reranking.md) | Joint question–memory scoring, bounds, and fallback |
 | [Temporal resolution](docs/temporal-resolution.md) | Historical validity, supersession, and contradictions |
 | [Context packing](docs/context-packing.md) | Useful information under a prompt-space budget |
+| [LangGraph integration](docs/langgraph-integration.md) | Read packed memory before reasoning, learn from completed tool outcomes, and record usefulness |
+| [LangGraph Store comparison](docs/langgraph-store-comparison.md) | Measured primitive capabilities and the boundary with the authoritative PostgreSQL model |
+| [Longitudinal benchmark](docs/longitudinal-benchmark.md) | Multi-session recall, changed facts, poison, tenant scope, budgets, and explicit forgetting |
 | [Consolidation clustering](docs/consolidation-clustering.md) | Group related episodes by tenant, subject, category, and time |
 | [Consolidation summaries](docs/consolidation-summaries.md) | Bounded candidates with complete supporting evidence |
 | [Consolidation promotion](docs/consolidation-promotion.md) | Decide whether repetition supports an observation or procedure |

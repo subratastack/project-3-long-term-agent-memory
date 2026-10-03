@@ -14,6 +14,21 @@ from collections.abc import Hashable, Mapping, Sequence
 from collections.abc import Set as AbstractSet
 
 
+def precision_at_k[T: Hashable](ranked: Sequence[T], relevant: AbstractSet[T], k: int) -> float:
+    """Distinct relevant ids in the top `k`, divided by `k` (which must be positive).
+
+    Missing results count as unfilled slots; repeated ids earn credit once,
+    consistently with `recall_at_k`. No relevant ids gives a score of 0.0.
+
+    Example:
+        Input:  ranked=["a", "b", "c"], relevant={"b", "z"}, k=2
+        Output: 0.5
+    """
+    if k <= 0:
+        raise ValueError("k must be positive")
+    return len(set(ranked[:k]) & relevant) / k
+
+
 def recall_at_k[T: Hashable](ranked: Sequence[T], relevant: AbstractSet[T], k: int) -> float:
     """Fraction of `relevant` ids that appear in the top `k` of `ranked`.
 

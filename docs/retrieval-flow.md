@@ -195,12 +195,23 @@ alone, so an old or contested fact cannot win by matching the query better.
 
 ## Reranking: measured quality and cost
 
-Read the metrics as follows: **Recall@5** is the share of relevant memories
-found in the top five; **MRR** averages the reciprocal rank of the first
+Finding the answer and keeping the results focused are separate goals.
+For an illustrative checkout-api query, suppose the top five contain one
+answer, one related incident, and three distractors. If the answer is the
+only required memory, recall is 1.0 but precision is `1 / 5 = 0.2`.
+
+Read the metrics as follows: **Precision@5** is the number of distinct
+answer memories in the top five divided by five; **Recall@5** is the share
+of required answer memories found in the top five. Both use grade-2 answer
+labels, as does **MRR**, which averages the reciprocal rank of the first
 relevant result (rank 1 contributes 1, rank 2 contributes 0.5); **nDCG@5**
-measures how close the top-five order is to an ideal relevance order.
-Higher is better for all three. **P50** is the median latency; **P95** is the
-latency at the 95th percentile. Lower latency is faster.
+measures how close the top-five order is to an ideal relevance order and
+also credits grade-1 context. Precision always divides by the requested
+cutoff, even if fewer results are returned; repeated IDs earn credit once.
+The benchmark averages each quality metric across queries, scoring only
+the first timed attempt per query. Higher is better for all four.
+**P50** is the median latency; **P95** is the latency at the 95th percentile.
+Lower latency is faster.
 
 `uv run python -m apps.benchmark.run_retrieval_eval` compares hybrid
 retrieval with and without the CrossEncoder over the *same* 30-candidate
@@ -209,10 +220,16 @@ fused pool (so the reranker is the only difference), on a labeled set of
 previously recorded results from a development machine, not a fresh run.
 Timings vary by hardware; quality depends on the fixed dataset and models:
 
-| strategy | Recall@5 | MRR | nDCG@5 | P50 ms | P95 ms | rerank P50 / P95 ms | candidates reranked |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| hybrid (RRF) | 1.000 | 0.906 | 0.952 | 44.3 | 55.3 | - | 0 |
-| hybrid + CrossEncoder | 1.000 | 0.938 | 0.964 | 52.4 | 57.9 | 7.8 / 9.6 | 24 (whole pool; cap 30) |
+| strategy | Precision@5 | Recall@5 | MRR | nDCG@5 | P50 ms | P95 ms | rerank P50 / P95 ms | candidates reranked |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| hybrid (RRF) | 0.200 | 1.000 | 0.906 | 0.952 | 44.3 | 55.3 | - | 0 |
+| hybrid + CrossEncoder | 0.200 | 1.000 | 0.938 | 0.964 | 52.4 | 57.9 | 7.8 / 9.6 | 24 (whole pool; cap 30) |
+
+Precision@5 above is derived from the recorded Recall@5 of 1.0 and the
+dataset's one grade-2 answer per query, rather than a fresh benchmark run.
+Its maximum on this dataset is therefore 0.2. The calculation lives in
+`apps/benchmark/metrics.py`; aggregation and formatting live in
+`apps/benchmark/run_retrieval_eval.py`.
 
 The reranker moved two answers from rank 2 to rank 1 (a negation query --
 "is dark mode turned off" -- and an intent query, "how should we contact the

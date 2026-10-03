@@ -38,7 +38,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["apps"]
+packages = ["apps", "integrations"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"

@@ -250,9 +250,18 @@ code does not read them from the environment yet -- pass `model_name=` /
 
 ## Measured quality and cost
 
-**Recall@5** measures how many relevant memories appear in the top five.
+Suppose a checkout-api query has one required answer and retrieval returns
+that answer alongside four other memories. This illustrative result has
+recall 1.0 and precision `1 / 5 = 0.2`: the answer was found, but only one
+of the five slots contains an answer.
+
+**Precision@5** counts distinct grade-2 answers in the top five and divides
+by five, including unfilled slots if fewer results arrive. **Recall@5**
+measures the fraction of required grade-2 answers found in the top five.
 **MRR** rewards placing the first relevant memory earlier; **nDCG@5** rewards
-an order closer to the ideal relevance order. Higher is better for each.
+an order closer to the ideal relevance order. MRR uses grade-2 answers;
+nDCG also credits grade-1 context. Quality metrics are averaged across
+queries using the first timed attempt of each. Higher is better for each.
 **P50/P95** describe median and 95th-percentile latency; lower is faster.
 The following numbers are a previously recorded development run, not the
 illustrative scores from the walkthrough or a fresh benchmark run.
@@ -266,10 +275,14 @@ fused candidate pool, so the reranker is the only difference. On the labeled
 set (24 memories, 16 queries with near-miss distractors), one development
 run gave:
 
-| strategy | Recall@5 | MRR | nDCG@5 | rerank P50 / P95 ms |
-| --- | --- | --- | --- | --- |
-| hybrid (RRF) | 1.000 | 0.906 | 0.952 | - |
-| hybrid + CrossEncoder | 1.000 | 0.938 | 0.964 | 7.8 / 9.6 |
+| strategy | Precision@5 | Recall@5 | MRR | nDCG@5 | rerank P50 / P95 ms |
+| --- | --- | --- | --- | --- | --- |
+| hybrid (RRF) | 0.200 | 1.000 | 0.906 | 0.952 | - |
+| hybrid + CrossEncoder | 0.200 | 1.000 | 0.938 | 0.964 | 7.8 / 9.6 |
+
+Precision@5 is derived from the recorded recall and the dataset's single
+grade-2 answer per query, rather than measured in a new run. Finding that
+answer yields `1 / 5`, so precision cannot exceed 0.2 on this dataset.
 
 About 8 ms per query at 24 candidates for better MRR/nDCG. Recall@5 is
 saturated on a corpus this small, so a larger dataset is needed before tuning
