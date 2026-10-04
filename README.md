@@ -184,6 +184,7 @@ uv run python -m apps.benchmark.run_context_packing_eval
 uv run python -m apps.benchmark.run_poisoning_eval   # add --database for PostgreSQL
 uv run python -m apps.benchmark.run_langgraph_store_eval
 uv run python -m apps.benchmark.run_longitudinal_eval
+uv run python -m apps.benchmark.run_capability_eval
 ```
 
 The first two require PostgreSQL and the relevant local models; the
@@ -192,6 +193,14 @@ and longitudinal replay use PostgreSQL inside rollback-only transactions and
 deterministic hash embeddings, with no model download. Their measured reports
 and limits are documented in the [Store comparison](docs/langgraph-store-comparison.md)
 and [longitudinal benchmark](docs/longitudinal-benchmark.md).
+
+The [seven capability benchmarks](docs/capability-benchmarks.md) produce
+separate Markdown learning reports and JSON traces for answer quality,
+reasoning, extraction, write policy, conflict resolution, forgetting, and
+prompt packing. They use independent fixture/profile files, the existing
+PostgreSQL database in rollback-only transactions, and installed local Ollama
+models. Start with the [measured reports](docs/reports/capabilities-initial/README.md)
+and use a fresh output directory for each comparison.
 
 ## Quick start
 
@@ -349,6 +358,8 @@ poisoned, stale, and cross-tenant input. See [the test suite](apps/tests) and
 | [LangGraph integration](docs/langgraph-integration.md) | Read packed memory before reasoning, learn from completed tool outcomes, and record usefulness |
 | [LangGraph Store comparison](docs/langgraph-store-comparison.md) | Measured primitive capabilities and the boundary with the authoritative PostgreSQL model |
 | [Longitudinal benchmark](docs/longitudinal-benchmark.md) | Multi-session recall, changed facts, poison, tenant scope, budgets, and explicit forgetting |
+| [MemoryAgentBench retrieval benchmark](docs/memory-agent-bench.md) | Independent Hugging Face dataset, retrieval diagnostics, and reproducible learning reports |
+| [Memory capability benchmarks](docs/capability-benchmarks.md) | Seven independent tracks with local Ollama, production policy/lifecycle checks, and Markdown learning reports |
 | [Consolidation clustering](docs/consolidation-clustering.md) | Group related episodes by tenant, subject, category, and time |
 | [Consolidation summaries](docs/consolidation-summaries.md) | Bounded candidates with complete supporting evidence |
 | [Consolidation promotion](docs/consolidation-promotion.md) | Decide whether repetition supports an observation or procedure |

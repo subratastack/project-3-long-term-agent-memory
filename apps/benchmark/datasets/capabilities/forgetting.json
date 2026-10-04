@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "track": "forgetting",
+  "origin": "Authored lifecycle scenarios with explicit expected states and priorities. Database extensions exercise historical reads, compaction, evidence deletion cascade and reingestion denial.",
+  "evaluation_time": "2026-10-01T00:00:00+00:00",
+  "cases": [
+    {
+      "id": "episode-grace-boundary",
+      "age_days": 30,
+      "confidence": 0.5,
+      "type": "episodic",
+      "expected_status": "active",
+      "expected_priority": 1
+    },
+    {
+      "id": "episode-one-half-life",
+      "age_days": 120,
+      "confidence": 0.5,
+      "type": "episodic",
+      "expected_status": "active",
+      "expected_priority": 0.5
+    },
+    {
+      "id": "episode-two-half-lives",
+      "age_days": 210,
+      "confidence": 0.5,
+      "type": "episodic",
+      "expected_status": "active",
+      "expected_priority": 0.25
+    },
+    {
+      "id": "episode-priority-floor",
+      "age_days": 2000,
+      "confidence": 0.5,
+      "type": "episodic",
+      "expected_status": "active",
+      "expected_priority": 0.05
+    },
+    {
+      "id": "high-confidence-retention",
+      "age_days": 210,
+      "confidence": 0.8,
+      "type": "episodic",
+      "expected_status": "active",
+      "expected_priority": 1
+    },
+    {
+      "id": "semantic-retention",
+      "age_days": 210,
+      "confidence": 0.5,
+      "type": "semantic",
+      "expected_status": "active",
+      "expected_priority": 1
+    },
+    {
+      "id": "procedural-retention",
+      "age_days": 210,
+      "confidence": 0.5,
+      "type": "procedural",
+      "expected_status": "active",
+      "expected_priority": 1
+    },
+    {
+      "id": "expiry",
+      "age_days": 10,
+      "confidence": 0.9,
+      "type": "episodic",
+      "valid_to_days_ago": 1,
+      "expected_status": "expired",
+      "expected_priority": 1
+    },
+    {
+      "id": "inclusive-valid-to",
+      "age_days": 10,
+      "confidence": 0.9,
+      "type": "episodic",
+      "valid_to_days_ago": 0,
+      "expected_status": "active",
+      "expected_priority": 1
+    },
+    {
+      "id": "quarantine-preserved",
+      "age_days": 210,
+      "confidence": 0.5,
+      "type": "episodic",
+      "status": "quarantined",
+      "expected_status": "quarantined",
+      "expected_priority": 1
+    }
+  ]
+}

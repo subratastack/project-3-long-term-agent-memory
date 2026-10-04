@@ -1,0 +1,2492 @@
+{
+  "track": "prompt_packing",
+  "created_at": "2026-10-04T00:16:45.243155+00:00",
+  "implementation_sha256": "7824cc1d753017577d5cf77a9d8aacaaab7d4555b7d19bd3949bb7e7f031c286",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39"
+  },
+  "fixture_sha256": "510636993c4dbcac270ff9f0b90d2579df83a8c3d165744f89faf973457ed926",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "reranker": null,
+  "token_counter": "production estimate_tokens",
+  "summary": [
+    {
+      "budget": 150,
+      "strategy": "rank_order",
+      "queries": 4,
+      "mean_tokens": 131,
+      "max_tokens": 149,
+      "mean_selected": 2.25,
+      "duplicate_rate": 0.3333333333333333,
+      "precision": 0.7777777777777778,
+      "coverage": 0.5,
+      "budget_breaches": 0
+    },
+    {
+      "budget": 150,
+      "strategy": "context_packer",
+      "queries": 4,
+      "mean_tokens": 130.75,
+      "max_tokens": 147,
+      "mean_selected": 2.25,
+      "duplicate_rate": 0.0,
+      "precision": 0.7777777777777778,
+      "coverage": 0.75,
+      "budget_breaches": 0
+    },
+    {
+      "budget": 300,
+      "strategy": "rank_order",
+      "queries": 4,
+      "mean_tokens": 282.75,
+      "max_tokens": 299,
+      "mean_selected": 5.25,
+      "duplicate_rate": 0.42857142857142855,
+      "precision": 0.7619047619047619,
+      "coverage": 0.9166666666666666,
+      "budget_breaches": 0
+    },
+    {
+      "budget": 300,
+      "strategy": "context_packer",
+      "queries": 4,
+      "mean_tokens": 290.5,
+      "max_tokens": 297,
+      "mean_selected": 6,
+      "duplicate_rate": 0.0,
+      "precision": 0.4166666666666667,
+      "coverage": 1.0,
+      "budget_breaches": 0
+    },
+    {
+      "budget": 500,
+      "strategy": "rank_order",
+      "queries": 4,
+      "mean_tokens": 487.75,
+      "max_tokens": 496,
+      "mean_selected": 9.5,
+      "duplicate_rate": 0.4473684210526316,
+      "precision": 0.5263157894736842,
+      "coverage": 1.0,
+      "budget_breaches": 0
+    },
+    {
+      "budget": 500,
+      "strategy": "context_packer",
+      "queries": 4,
+      "mean_tokens": 483,
+      "max_tokens": 492,
+      "mean_selected": 10,
+      "duplicate_rate": 0.0,
+      "precision": 0.25,
+      "coverage": 1.0,
+      "budget_breaches": 0
+    }
+  ],
+  "results": [
+    {
+      "question": "checkout-api requests are timing out, what should I do",
+      "strategy": "rank_order",
+      "budget": 150,
+      "candidate_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_RUNBOOK",
+        "LATENCY_SLO",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_INC_3",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "RATE_LIMIT",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "CACHE",
+        "POOL_INC_3",
+        "CERT_RUNBOOK",
+        "POOL_INC_4",
+        "ONCALL",
+        "CERT_CFG",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2"
+      ],
+      "tokens": 123,
+      "selected": 2,
+      "duplicates": 1,
+      "useful": 2,
+      "coverage": 0.3333333333333333,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "checkout-api requests are timing out, what should I do",
+      "strategy": "context_packer",
+      "budget": 150,
+      "candidate_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_RUNBOOK",
+        "LATENCY_SLO",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_INC_3",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "RATE_LIMIT",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "CACHE",
+        "POOL_INC_3",
+        "CERT_RUNBOOK",
+        "POOL_INC_4",
+        "ONCALL",
+        "CERT_CFG",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_CFG"
+      ],
+      "tokens": 116,
+      "selected": 2,
+      "duplicates": 0,
+      "useful": 2,
+      "coverage": 0.6666666666666666,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5",
+          "rank": 2,
+          "reason": "duplicate",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 4,
+          "reason": "redundant",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "39e9baee-84a5-46ae-9b1c-2d6f6951ebef",
+          "rank": 5,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "2535600e-2a33-4432-b98a-79fed4717547",
+          "rank": 6,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 7,
+          "reason": "redundant",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 8,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 9,
+          "reason": "redundant",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "dd04848e-4054-4d36-a613-86baa733310e",
+          "rank": 10,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 11,
+          "reason": "duplicate",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "bf60c83a-3381-4229-bd83-9a42bb7f457e",
+          "rank": 12,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 13,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 14,
+          "reason": "duplicate",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d",
+          "rank": 15,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "a871cfa6-4590-4974-ab0c-e5e282bffcfd",
+          "rank": 16,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b50ed486-6c80-4a08-92db-bd4632bac8a6",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 18,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 19,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "a30a6bae-3b28-4f0d-86a9-cac70d7e48b4",
+          "rank": 20,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d9784fb-06db-47fe-aba0-f0e2b8d7731d",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 23,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8928a7ed-b3c3-4c46-9e0c-57d509152d51",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "checkout-api requests are timing out, what should I do",
+      "strategy": "rank_order",
+      "budget": 300,
+      "candidate_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_RUNBOOK",
+        "LATENCY_SLO",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_INC_3",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "RATE_LIMIT",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "CACHE",
+        "POOL_INC_3",
+        "CERT_RUNBOOK",
+        "POOL_INC_4",
+        "ONCALL",
+        "CERT_CFG",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_RUNBOOK"
+      ],
+      "tokens": 280,
+      "selected": 5,
+      "duplicates": 2,
+      "useful": 5,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "checkout-api requests are timing out, what should I do",
+      "strategy": "context_packer",
+      "budget": 300,
+      "candidate_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_RUNBOOK",
+        "LATENCY_SLO",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_INC_3",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "RATE_LIMIT",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "CACHE",
+        "POOL_INC_3",
+        "CERT_RUNBOOK",
+        "POOL_INC_4",
+        "ONCALL",
+        "CERT_CFG",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_CFG",
+        "TIMEOUT_RUNBOOK",
+        "LATENCY_SLO",
+        "RATE_LIMIT",
+        "DEPLOY_FREEZE"
+      ],
+      "tokens": 297,
+      "selected": 6,
+      "duplicates": 0,
+      "useful": 3,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5",
+          "rank": 2,
+          "reason": "duplicate",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 4,
+          "reason": "redundant",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 7,
+          "reason": "redundant",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 8,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 9,
+          "reason": "redundant",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "dd04848e-4054-4d36-a613-86baa733310e",
+          "rank": 10,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 11,
+          "reason": "duplicate",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 13,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 14,
+          "reason": "duplicate",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d",
+          "rank": 15,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b50ed486-6c80-4a08-92db-bd4632bac8a6",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 18,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 19,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "a30a6bae-3b28-4f0d-86a9-cac70d7e48b4",
+          "rank": 20,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d9784fb-06db-47fe-aba0-f0e2b8d7731d",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 23,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8928a7ed-b3c3-4c46-9e0c-57d509152d51",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "checkout-api requests are timing out, what should I do",
+      "strategy": "rank_order",
+      "budget": 500,
+      "candidate_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_RUNBOOK",
+        "LATENCY_SLO",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_INC_3",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "RATE_LIMIT",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "CACHE",
+        "POOL_INC_3",
+        "CERT_RUNBOOK",
+        "POOL_INC_4",
+        "ONCALL",
+        "CERT_CFG",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_RUNBOOK",
+        "LATENCY_SLO",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_INC_3"
+      ],
+      "tokens": 471,
+      "selected": 9,
+      "duplicates": 5,
+      "useful": 8,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "checkout-api requests are timing out, what should I do",
+      "strategy": "context_packer",
+      "budget": 500,
+      "candidate_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_RUNBOOK",
+        "LATENCY_SLO",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_INC_3",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "RATE_LIMIT",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "CACHE",
+        "POOL_INC_3",
+        "CERT_RUNBOOK",
+        "POOL_INC_4",
+        "ONCALL",
+        "CERT_CFG",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "TIMEOUT_INC_1",
+        "TIMEOUT_CFG",
+        "TIMEOUT_RUNBOOK",
+        "LATENCY_SLO",
+        "POOL_INC_2",
+        "RATE_LIMIT",
+        "CERT_INC_2",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "ONCALL"
+      ],
+      "tokens": 492,
+      "selected": 10,
+      "duplicates": 0,
+      "useful": 3,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5",
+          "rank": 2,
+          "reason": "duplicate",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 4,
+          "reason": "redundant",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 7,
+          "reason": "redundant",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 8,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 9,
+          "reason": "redundant",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 11,
+          "reason": "duplicate",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 14,
+          "reason": "duplicate",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d",
+          "rank": 15,
+          "reason": "redundant",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 18,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 19,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "a30a6bae-3b28-4f0d-86a9-cac70d7e48b4",
+          "rank": 20,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 21,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 23,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8928a7ed-b3c3-4c46-9e0c-57d509152d51",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "the db-primary connection pool is exhausted again",
+      "strategy": "rank_order",
+      "budget": 150,
+      "candidate_labels": [
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "POOL_RUNBOOK",
+        "POOL_INC_3",
+        "POOL_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_6",
+        "DEPLOY_FREEZE",
+        "TIMEOUT_RUNBOOK",
+        "CERT_INC_1",
+        "CERT_INC_2",
+        "TIMEOUT_INC_3",
+        "CERT_RUNBOOK",
+        "TIMEOUT_CFG",
+        "CERT_INC_3",
+        "RATE_LIMIT",
+        "CACHE",
+        "CERT_CFG",
+        "ONCALL",
+        "LATENCY_SLO"
+      ],
+      "selected_labels": [
+        "POOL_INC_2",
+        "POOL_INC_1"
+      ],
+      "tokens": 125,
+      "selected": 2,
+      "duplicates": 1,
+      "useful": 2,
+      "coverage": 0.3333333333333333,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "the db-primary connection pool is exhausted again",
+      "strategy": "context_packer",
+      "budget": 150,
+      "candidate_labels": [
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "POOL_RUNBOOK",
+        "POOL_INC_3",
+        "POOL_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_6",
+        "DEPLOY_FREEZE",
+        "TIMEOUT_RUNBOOK",
+        "CERT_INC_1",
+        "CERT_INC_2",
+        "TIMEOUT_INC_3",
+        "CERT_RUNBOOK",
+        "TIMEOUT_CFG",
+        "CERT_INC_3",
+        "RATE_LIMIT",
+        "CACHE",
+        "CERT_CFG",
+        "ONCALL",
+        "LATENCY_SLO"
+      ],
+      "selected_labels": [
+        "POOL_INC_2",
+        "POOL_RUNBOOK"
+      ],
+      "tokens": 132,
+      "selected": 2,
+      "duplicates": 0,
+      "useful": 2,
+      "coverage": 0.6666666666666666,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 2,
+          "reason": "duplicate",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 4,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 5,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "8928a7ed-b3c3-4c46-9e0c-57d509152d51",
+          "rank": 6,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5",
+          "rank": 7,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441",
+          "rank": 8,
+          "reason": "duplicate",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 9,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 10,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 11,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "a871cfa6-4590-4974-ab0c-e5e282bffcfd",
+          "rank": 12,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "39e9baee-84a5-46ae-9b1c-2d6f6951ebef",
+          "rank": 13,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 14,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 15,
+          "reason": "duplicate",
+          "related_memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 16,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "a30a6bae-3b28-4f0d-86a9-cac70d7e48b4",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "c00a1113-b8c6-4968-8df1-f908ed77856b",
+          "rank": 18,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d",
+          "rank": 19,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "bf60c83a-3381-4229-bd83-9a42bb7f457e",
+          "rank": 20,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d9784fb-06db-47fe-aba0-f0e2b8d7731d",
+          "rank": 23,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "2535600e-2a33-4432-b98a-79fed4717547",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "the db-primary connection pool is exhausted again",
+      "strategy": "rank_order",
+      "budget": 300,
+      "candidate_labels": [
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "POOL_RUNBOOK",
+        "POOL_INC_3",
+        "POOL_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_6",
+        "DEPLOY_FREEZE",
+        "TIMEOUT_RUNBOOK",
+        "CERT_INC_1",
+        "CERT_INC_2",
+        "TIMEOUT_INC_3",
+        "CERT_RUNBOOK",
+        "TIMEOUT_CFG",
+        "CERT_INC_3",
+        "RATE_LIMIT",
+        "CACHE",
+        "CERT_CFG",
+        "ONCALL",
+        "LATENCY_SLO"
+      ],
+      "selected_labels": [
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "POOL_RUNBOOK",
+        "POOL_INC_3",
+        "POOL_INC_4"
+      ],
+      "tokens": 280,
+      "selected": 5,
+      "duplicates": 3,
+      "useful": 5,
+      "coverage": 0.6666666666666666,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "the db-primary connection pool is exhausted again",
+      "strategy": "context_packer",
+      "budget": 300,
+      "candidate_labels": [
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "POOL_RUNBOOK",
+        "POOL_INC_3",
+        "POOL_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_6",
+        "DEPLOY_FREEZE",
+        "TIMEOUT_RUNBOOK",
+        "CERT_INC_1",
+        "CERT_INC_2",
+        "TIMEOUT_INC_3",
+        "CERT_RUNBOOK",
+        "TIMEOUT_CFG",
+        "CERT_INC_3",
+        "RATE_LIMIT",
+        "CACHE",
+        "CERT_CFG",
+        "ONCALL",
+        "LATENCY_SLO"
+      ],
+      "selected_labels": [
+        "POOL_INC_2",
+        "POOL_RUNBOOK",
+        "POOL_CFG",
+        "TIMEOUT_INC_2",
+        "DEPLOY_FREEZE",
+        "RATE_LIMIT"
+      ],
+      "tokens": 290,
+      "selected": 6,
+      "duplicates": 0,
+      "useful": 3,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 2,
+          "reason": "duplicate",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 4,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 5,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441",
+          "rank": 8,
+          "reason": "duplicate",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 9,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 10,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 11,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "39e9baee-84a5-46ae-9b1c-2d6f6951ebef",
+          "rank": 13,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 14,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 15,
+          "reason": "duplicate",
+          "related_memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 16,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "a30a6bae-3b28-4f0d-86a9-cac70d7e48b4",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "c00a1113-b8c6-4968-8df1-f908ed77856b",
+          "rank": 18,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d",
+          "rank": 19,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d9784fb-06db-47fe-aba0-f0e2b8d7731d",
+          "rank": 23,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "2535600e-2a33-4432-b98a-79fed4717547",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "the db-primary connection pool is exhausted again",
+      "strategy": "rank_order",
+      "budget": 500,
+      "candidate_labels": [
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "POOL_RUNBOOK",
+        "POOL_INC_3",
+        "POOL_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_6",
+        "DEPLOY_FREEZE",
+        "TIMEOUT_RUNBOOK",
+        "CERT_INC_1",
+        "CERT_INC_2",
+        "TIMEOUT_INC_3",
+        "CERT_RUNBOOK",
+        "TIMEOUT_CFG",
+        "CERT_INC_3",
+        "RATE_LIMIT",
+        "CACHE",
+        "CERT_CFG",
+        "ONCALL",
+        "LATENCY_SLO"
+      ],
+      "selected_labels": [
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "POOL_RUNBOOK",
+        "POOL_INC_3",
+        "POOL_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_5",
+        "DEPLOY_FREEZE"
+      ],
+      "tokens": 496,
+      "selected": 10,
+      "duplicates": 5,
+      "useful": 6,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "the db-primary connection pool is exhausted again",
+      "strategy": "context_packer",
+      "budget": 500,
+      "candidate_labels": [
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "POOL_RUNBOOK",
+        "POOL_INC_3",
+        "POOL_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_6",
+        "DEPLOY_FREEZE",
+        "TIMEOUT_RUNBOOK",
+        "CERT_INC_1",
+        "CERT_INC_2",
+        "TIMEOUT_INC_3",
+        "CERT_RUNBOOK",
+        "TIMEOUT_CFG",
+        "CERT_INC_3",
+        "RATE_LIMIT",
+        "CACHE",
+        "CERT_CFG",
+        "ONCALL",
+        "LATENCY_SLO"
+      ],
+      "selected_labels": [
+        "POOL_INC_2",
+        "POOL_RUNBOOK",
+        "POOL_CFG",
+        "TIMEOUT_INC_2",
+        "DEPLOY_FREEZE",
+        "CERT_INC_1",
+        "TIMEOUT_CFG",
+        "RATE_LIMIT",
+        "CACHE",
+        "ONCALL"
+      ],
+      "tokens": 465,
+      "selected": 10,
+      "duplicates": 0,
+      "useful": 3,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 2,
+          "reason": "duplicate",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 4,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 5,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441",
+          "rank": 8,
+          "reason": "duplicate",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 9,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 10,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 11,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "39e9baee-84a5-46ae-9b1c-2d6f6951ebef",
+          "rank": 13,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 15,
+          "reason": "duplicate",
+          "related_memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 16,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "a30a6bae-3b28-4f0d-86a9-cac70d7e48b4",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d",
+          "rank": 19,
+          "reason": "redundant",
+          "related_memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341"
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "2535600e-2a33-4432-b98a-79fed4717547",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "payments gateway returns 503 because of an expired certificate",
+      "strategy": "rank_order",
+      "budget": 150,
+      "candidate_labels": [
+        "CERT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_RUNBOOK",
+        "CERT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_3",
+        "POOL_INC_1",
+        "POOL_INC_2",
+        "LATENCY_SLO",
+        "POOL_RUNBOOK",
+        "RATE_LIMIT",
+        "ONCALL",
+        "POOL_INC_4",
+        "CACHE",
+        "POOL_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "CERT_INC_3",
+        "CERT_INC_2"
+      ],
+      "tokens": 127,
+      "selected": 2,
+      "duplicates": 1,
+      "useful": 2,
+      "coverage": 0.3333333333333333,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "payments gateway returns 503 because of an expired certificate",
+      "strategy": "context_packer",
+      "budget": 150,
+      "candidate_labels": [
+        "CERT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_RUNBOOK",
+        "CERT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_3",
+        "POOL_INC_1",
+        "POOL_INC_2",
+        "LATENCY_SLO",
+        "POOL_RUNBOOK",
+        "RATE_LIMIT",
+        "ONCALL",
+        "POOL_INC_4",
+        "CACHE",
+        "POOL_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "CERT_INC_3",
+        "CERT_RUNBOOK"
+      ],
+      "tokens": 128,
+      "selected": 2,
+      "duplicates": 0,
+      "useful": 2,
+      "coverage": 0.6666666666666666,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 2,
+          "reason": "redundant",
+          "related_memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d"
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 3,
+          "reason": "duplicate",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 5,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 6,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 7,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 8,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "39e9baee-84a5-46ae-9b1c-2d6f6951ebef",
+          "rank": 9,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441",
+          "rank": 10,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5",
+          "rank": 11,
+          "reason": "duplicate",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "c00a1113-b8c6-4968-8df1-f908ed77856b",
+          "rank": 12,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 13,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 14,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "dd04848e-4054-4d36-a613-86baa733310e",
+          "rank": 15,
+          "reason": "duplicate",
+          "related_memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc"
+        },
+        {
+          "memory_id": "2535600e-2a33-4432-b98a-79fed4717547",
+          "rank": 16,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b50ed486-6c80-4a08-92db-bd4632bac8a6",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "bf60c83a-3381-4229-bd83-9a42bb7f457e",
+          "rank": 18,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d9784fb-06db-47fe-aba0-f0e2b8d7731d",
+          "rank": 19,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 20,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "a871cfa6-4590-4974-ab0c-e5e282bffcfd",
+          "rank": 23,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8928a7ed-b3c3-4c46-9e0c-57d509152d51",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "payments gateway returns 503 because of an expired certificate",
+      "strategy": "rank_order",
+      "budget": 300,
+      "candidate_labels": [
+        "CERT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_RUNBOOK",
+        "CERT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_3",
+        "POOL_INC_1",
+        "POOL_INC_2",
+        "LATENCY_SLO",
+        "POOL_RUNBOOK",
+        "RATE_LIMIT",
+        "ONCALL",
+        "POOL_INC_4",
+        "CACHE",
+        "POOL_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "CERT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_RUNBOOK",
+        "CERT_CFG"
+      ],
+      "tokens": 272,
+      "selected": 5,
+      "duplicates": 2,
+      "useful": 5,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "payments gateway returns 503 because of an expired certificate",
+      "strategy": "context_packer",
+      "budget": 300,
+      "candidate_labels": [
+        "CERT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_RUNBOOK",
+        "CERT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_3",
+        "POOL_INC_1",
+        "POOL_INC_2",
+        "LATENCY_SLO",
+        "POOL_RUNBOOK",
+        "RATE_LIMIT",
+        "ONCALL",
+        "POOL_INC_4",
+        "CACHE",
+        "POOL_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "CERT_INC_3",
+        "CERT_RUNBOOK",
+        "CERT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_CFG",
+        "DEPLOY_FREEZE"
+      ],
+      "tokens": 294,
+      "selected": 6,
+      "duplicates": 0,
+      "useful": 3,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 2,
+          "reason": "redundant",
+          "related_memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d"
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 3,
+          "reason": "duplicate",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 7,
+          "reason": "redundant",
+          "related_memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696"
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 8,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "39e9baee-84a5-46ae-9b1c-2d6f6951ebef",
+          "rank": 9,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441",
+          "rank": 10,
+          "reason": "redundant",
+          "related_memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696"
+        },
+        {
+          "memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5",
+          "rank": 11,
+          "reason": "duplicate",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 13,
+          "reason": "redundant",
+          "related_memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696"
+        },
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 14,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "dd04848e-4054-4d36-a613-86baa733310e",
+          "rank": 15,
+          "reason": "duplicate",
+          "related_memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc"
+        },
+        {
+          "memory_id": "2535600e-2a33-4432-b98a-79fed4717547",
+          "rank": 16,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b50ed486-6c80-4a08-92db-bd4632bac8a6",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "bf60c83a-3381-4229-bd83-9a42bb7f457e",
+          "rank": 18,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d9784fb-06db-47fe-aba0-f0e2b8d7731d",
+          "rank": 19,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 20,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8928a7ed-b3c3-4c46-9e0c-57d509152d51",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "payments gateway returns 503 because of an expired certificate",
+      "strategy": "rank_order",
+      "budget": 500,
+      "candidate_labels": [
+        "CERT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_RUNBOOK",
+        "CERT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_3",
+        "POOL_INC_1",
+        "POOL_INC_2",
+        "LATENCY_SLO",
+        "POOL_RUNBOOK",
+        "RATE_LIMIT",
+        "ONCALL",
+        "POOL_INC_4",
+        "CACHE",
+        "POOL_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "CERT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_RUNBOOK",
+        "CERT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_RUNBOOK"
+      ],
+      "tokens": 491,
+      "selected": 9,
+      "duplicates": 4,
+      "useful": 5,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "payments gateway returns 503 because of an expired certificate",
+      "strategy": "context_packer",
+      "budget": 500,
+      "candidate_labels": [
+        "CERT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "CERT_RUNBOOK",
+        "CERT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_1",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_3",
+        "POOL_INC_1",
+        "POOL_INC_2",
+        "LATENCY_SLO",
+        "POOL_RUNBOOK",
+        "RATE_LIMIT",
+        "ONCALL",
+        "POOL_INC_4",
+        "CACHE",
+        "POOL_INC_3",
+        "DEPLOY_FREEZE",
+        "POOL_CFG"
+      ],
+      "selected_labels": [
+        "CERT_INC_3",
+        "CERT_RUNBOOK",
+        "CERT_CFG",
+        "TIMEOUT_INC_4",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_CFG",
+        "POOL_INC_1",
+        "RATE_LIMIT",
+        "ONCALL",
+        "DEPLOY_FREEZE"
+      ],
+      "tokens": 492,
+      "selected": 10,
+      "duplicates": 0,
+      "useful": 3,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 2,
+          "reason": "redundant",
+          "related_memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d"
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 3,
+          "reason": "duplicate",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 7,
+          "reason": "redundant",
+          "related_memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696"
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 8,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441",
+          "rank": 10,
+          "reason": "redundant",
+          "related_memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696"
+        },
+        {
+          "memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5",
+          "rank": 11,
+          "reason": "duplicate",
+          "related_memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 13,
+          "reason": "redundant",
+          "related_memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696"
+        },
+        {
+          "memory_id": "dd04848e-4054-4d36-a613-86baa733310e",
+          "rank": 15,
+          "reason": "duplicate",
+          "related_memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc"
+        },
+        {
+          "memory_id": "2535600e-2a33-4432-b98a-79fed4717547",
+          "rank": 16,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b50ed486-6c80-4a08-92db-bd4632bac8a6",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 20,
+          "reason": "redundant",
+          "related_memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc"
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 22,
+          "reason": "redundant",
+          "related_memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc"
+        },
+        {
+          "memory_id": "8928a7ed-b3c3-4c46-9e0c-57d509152d51",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "how many requests per minute can we send to the partner API",
+      "strategy": "rank_order",
+      "budget": 150,
+      "candidate_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "LATENCY_SLO",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "CACHE",
+        "CERT_INC_3",
+        "ONCALL",
+        "POOL_INC_3",
+        "CERT_CFG",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "POOL_INC_4",
+        "CERT_RUNBOOK"
+      ],
+      "selected_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "LATENCY_SLO"
+      ],
+      "tokens": 149,
+      "selected": 3,
+      "duplicates": 0,
+      "useful": 1,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "how many requests per minute can we send to the partner API",
+      "strategy": "context_packer",
+      "budget": 150,
+      "candidate_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "LATENCY_SLO",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "CACHE",
+        "CERT_INC_3",
+        "ONCALL",
+        "POOL_INC_3",
+        "CERT_CFG",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "POOL_INC_4",
+        "CERT_RUNBOOK"
+      ],
+      "selected_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "POOL_CFG"
+      ],
+      "tokens": 147,
+      "selected": 3,
+      "duplicates": 0,
+      "useful": 1,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5",
+          "rank": 3,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441",
+          "rank": 4,
+          "reason": "duplicate",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "dd04848e-4054-4d36-a613-86baa733310e",
+          "rank": 5,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 6,
+          "reason": "duplicate",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "2535600e-2a33-4432-b98a-79fed4717547",
+          "rank": 7,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "39e9baee-84a5-46ae-9b1c-2d6f6951ebef",
+          "rank": 8,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 9,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 11,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 12,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 13,
+          "reason": "duplicate",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 14,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 15,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 16,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d9784fb-06db-47fe-aba0-f0e2b8d7731d",
+          "rank": 18,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 19,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 20,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "a871cfa6-4590-4974-ab0c-e5e282bffcfd",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b50ed486-6c80-4a08-92db-bd4632bac8a6",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 23,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "a30a6bae-3b28-4f0d-86a9-cac70d7e48b4",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "how many requests per minute can we send to the partner API",
+      "strategy": "rank_order",
+      "budget": 300,
+      "candidate_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "LATENCY_SLO",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "CACHE",
+        "CERT_INC_3",
+        "ONCALL",
+        "POOL_INC_3",
+        "CERT_CFG",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "POOL_INC_4",
+        "CERT_RUNBOOK"
+      ],
+      "selected_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "POOL_INC_2",
+        "POOL_INC_1"
+      ],
+      "tokens": 299,
+      "selected": 6,
+      "duplicates": 2,
+      "useful": 1,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "how many requests per minute can we send to the partner API",
+      "strategy": "context_packer",
+      "budget": 300,
+      "candidate_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "LATENCY_SLO",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "CACHE",
+        "CERT_INC_3",
+        "ONCALL",
+        "POOL_INC_3",
+        "CERT_CFG",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "POOL_INC_4",
+        "CERT_RUNBOOK"
+      ],
+      "selected_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "POOL_INC_2",
+        "LATENCY_SLO",
+        "POOL_CFG"
+      ],
+      "tokens": 281,
+      "selected": 6,
+      "duplicates": 0,
+      "useful": 1,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441",
+          "rank": 4,
+          "reason": "duplicate",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 6,
+          "reason": "duplicate",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "39e9baee-84a5-46ae-9b1c-2d6f6951ebef",
+          "rank": 8,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 9,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 11,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61",
+          "rank": 12,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 13,
+          "reason": "duplicate",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 14,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 15,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "d013de83-c8ea-48d6-b072-c31e88e8a7db",
+          "rank": 16,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d",
+          "rank": 17,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "8d9784fb-06db-47fe-aba0-f0e2b8d7731d",
+          "rank": 18,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 19,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 20,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "a871cfa6-4590-4974-ab0c-e5e282bffcfd",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b50ed486-6c80-4a08-92db-bd4632bac8a6",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 23,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "a30a6bae-3b28-4f0d-86a9-cac70d7e48b4",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    },
+    {
+      "question": "how many requests per minute can we send to the partner API",
+      "strategy": "rank_order",
+      "budget": 500,
+      "candidate_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "LATENCY_SLO",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "CACHE",
+        "CERT_INC_3",
+        "ONCALL",
+        "POOL_INC_3",
+        "CERT_CFG",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "POOL_INC_4",
+        "CERT_RUNBOOK"
+      ],
+      "selected_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "LATENCY_SLO",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_4",
+        "POOL_CFG"
+      ],
+      "tokens": 493,
+      "selected": 10,
+      "duplicates": 3,
+      "useful": 1,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": []
+    },
+    {
+      "question": "how many requests per minute can we send to the partner API",
+      "strategy": "context_packer",
+      "budget": 500,
+      "candidate_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "TIMEOUT_INC_1",
+        "POOL_INC_2",
+        "POOL_INC_1",
+        "LATENCY_SLO",
+        "TIMEOUT_RUNBOOK",
+        "TIMEOUT_INC_4",
+        "POOL_CFG",
+        "TIMEOUT_INC_3",
+        "CERT_INC_2",
+        "CERT_INC_1",
+        "TIMEOUT_INC_5",
+        "TIMEOUT_INC_6",
+        "CACHE",
+        "CERT_INC_3",
+        "ONCALL",
+        "POOL_INC_3",
+        "CERT_CFG",
+        "DEPLOY_FREEZE",
+        "POOL_RUNBOOK",
+        "POOL_INC_4",
+        "CERT_RUNBOOK"
+      ],
+      "selected_labels": [
+        "RATE_LIMIT",
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC_2",
+        "POOL_INC_2",
+        "LATENCY_SLO",
+        "TIMEOUT_RUNBOOK",
+        "POOL_CFG",
+        "CERT_INC_2",
+        "CACHE",
+        "ONCALL"
+      ],
+      "tokens": 483,
+      "selected": 10,
+      "duplicates": 0,
+      "useful": 1,
+      "coverage": 1.0,
+      "budget_breach": false,
+      "packing_skips": [
+        {
+          "memory_id": "62c8d93e-7db1-4b97-aa6a-92f5715d0441",
+          "rank": 4,
+          "reason": "duplicate",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "7731f287-cfd9-473e-acff-aa009eb8f8fc",
+          "rank": 6,
+          "reason": "duplicate",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "b6b1add3-dfb6-4c60-92c3-8bb0af2db696",
+          "rank": 9,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "6f2dce1f-cd02-47af-903d-8026e702ecbf",
+          "rank": 11,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "bc3c1b1d-eb7e-49fe-b4c9-ba2881259341",
+          "rank": 13,
+          "reason": "duplicate",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "f1689c24-362c-42d2-b133-aa4597922f01",
+          "rank": 14,
+          "reason": "redundant",
+          "related_memory_id": "f58f9023-ca46-4707-91d8-3b23cf1aa2d5"
+        },
+        {
+          "memory_id": "f8b800d5-a56d-4bb1-82b4-adfd0ba9fbde",
+          "rank": 15,
+          "reason": "duplicate",
+          "related_memory_id": "f1689c24-362c-42d2-b133-aa4597922f01"
+        },
+        {
+          "memory_id": "571b0d51-c926-4659-ac12-87ffff2ebf8d",
+          "rank": 17,
+          "reason": "redundant",
+          "related_memory_id": "571a243b-5bd6-419d-b44e-307ba2924f61"
+        },
+        {
+          "memory_id": "26399f52-0d88-4e95-bee3-1674031571a3",
+          "rank": 19,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "8d19ec29-d23d-427d-bb50-9204f469d754",
+          "rank": 20,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "a871cfa6-4590-4974-ab0c-e5e282bffcfd",
+          "rank": 21,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "b50ed486-6c80-4a08-92db-bd4632bac8a6",
+          "rank": 22,
+          "reason": "over_budget",
+          "related_memory_id": null
+        },
+        {
+          "memory_id": "d5677d3a-4746-4cf8-8344-edb9ad3bedef",
+          "rank": 23,
+          "reason": "redundant",
+          "related_memory_id": "dd04848e-4054-4d36-a613-86baa733310e"
+        },
+        {
+          "memory_id": "a30a6bae-3b28-4f0d-86a9-cac70d7e48b4",
+          "rank": 24,
+          "reason": "over_budget",
+          "related_memory_id": null
+        }
+      ]
+    }
+  ]
+}

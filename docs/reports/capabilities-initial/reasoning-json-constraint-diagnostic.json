@@ -1,0 +1,421 @@
+{
+  "track": "reasoning",
+  "created_at": "2026-10-04T00:07:58.210215+00:00",
+  "model": {
+    "name": "qwen3:14b",
+    "digest": "bdbd181c33f2ed1b31c972991882db3cf4d192569092138a7d29e973cd9debe8",
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "qwen3",
+      "families": [
+        "qwen3"
+      ],
+      "parameter_size": "14.8B",
+      "quantization_level": "Q4_K_M"
+    },
+    "capabilities": [
+      "completion",
+      "tools",
+      "thinking"
+    ],
+    "options": {
+      "temperature": 0,
+      "seed": 42,
+      "num_ctx": 8192,
+      "num_predict": 2048
+    }
+  },
+  "fixture_sha256": "3ce79d6b551ac2782daca2e364c950c5ab00c6577293fa7a0c581f81a4a98a90",
+  "summary": [
+    {
+      "think": false,
+      "cases": 6,
+      "success_rate": 1,
+      "valid_json_rate": 1,
+      "abstention_accuracy": 1,
+      "evidence_complete_rate": 0.5,
+      "mean_latency_ms": 1823.2169166664487,
+      "length_stops": 0
+    },
+    {
+      "think": true,
+      "cases": 6,
+      "success_rate": 0,
+      "valid_json_rate": 0,
+      "abstention_accuracy": 0,
+      "evidence_complete_rate": 0,
+      "mean_latency_ms": 329.80866983355855,
+      "length_stops": 0
+    }
+  ],
+  "results": [
+    {
+      "case_id": "capacity",
+      "think": false,
+      "question": "checkout-api has 8 workers. Each worker handles 30 requests per second. What is total capacity in requests per second?",
+      "expected_answers": [
+        "240"
+      ],
+      "expected_abstain": false,
+      "expected_evidence_ids": [
+        "M1",
+        "M2"
+      ],
+      "model": "qwen3:14b",
+      "latency_ms": 6220.602404000601,
+      "response": "{\"answer\": \"240\", \"citations\": [\"M1\", \"M2\"], \"abstain\": false}",
+      "done_reason": "stop",
+      "prompt_eval_count": 171,
+      "eval_count": 28,
+      "total_duration": 6219063280,
+      "load_duration": 5024959231,
+      "parsed": {
+        "answer": "240",
+        "citations": [
+          "M1",
+          "M2"
+        ],
+        "abstain": false
+      },
+      "error": null,
+      "exact_match": 1.0,
+      "alias_containment": 1.0,
+      "token_f1": 1.0,
+      "success": true,
+      "abstention_correct": true,
+      "evidence_complete": true
+    },
+    {
+      "case_id": "timeout-chain",
+      "think": false,
+      "question": "Which service should be checked first for checkout-api timeouts?",
+      "expected_answers": [
+        "db-primary"
+      ],
+      "expected_abstain": false,
+      "expected_evidence_ids": [
+        "M1",
+        "M2",
+        "M3"
+      ],
+      "model": "qwen3:14b",
+      "latency_ms": 1076.0498979998374,
+      "response": "{\"answer\": \"db-primary\", \"citations\": [\"M2\", \"M3\"], \"abstain\": false}",
+      "done_reason": "stop",
+      "prompt_eval_count": 171,
+      "eval_count": 27,
+      "total_duration": 1074621345,
+      "load_duration": 97475167,
+      "parsed": {
+        "answer": "db-primary",
+        "citations": [
+          "M2",
+          "M3"
+        ],
+        "abstain": false
+      },
+      "error": null,
+      "exact_match": 1.0,
+      "alias_containment": 1.0,
+      "token_f1": 1.0,
+      "success": true,
+      "abstention_correct": true,
+      "evidence_complete": false
+    },
+    {
+      "case_id": "historical-setting",
+      "think": false,
+      "question": "What was checkout-api's timeout on 2026-09-30, in seconds?",
+      "expected_answers": [
+        "2"
+      ],
+      "expected_abstain": false,
+      "expected_evidence_ids": [
+        "M1",
+        "M2"
+      ],
+      "model": "qwen3:14b",
+      "latency_ms": 963.8228169987997,
+      "response": "{\"answer\": \"2\", \"citations\": [\"M1\"], \"abstain\": false}",
+      "done_reason": "stop",
+      "prompt_eval_count": 188,
+      "eval_count": 22,
+      "total_duration": 962459582,
+      "load_duration": 90172827,
+      "parsed": {
+        "answer": "2",
+        "citations": [
+          "M1"
+        ],
+        "abstain": false
+      },
+      "error": null,
+      "exact_match": 1.0,
+      "alias_containment": 1.0,
+      "token_f1": 1.0,
+      "success": true,
+      "abstention_correct": true,
+      "evidence_complete": false
+    },
+    {
+      "case_id": "equal-authority-conflict",
+      "think": false,
+      "question": "What is the current checkout-api timeout in seconds?",
+      "expected_answers": [],
+      "expected_abstain": true,
+      "expected_evidence_ids": [],
+      "model": "qwen3:14b",
+      "latency_ms": 756.3477080002485,
+      "response": "{\"answer\": \"\", \"citations\": [], \"abstain\": true}",
+      "done_reason": "stop",
+      "prompt_eval_count": 166,
+      "eval_count": 17,
+      "total_duration": 755081546,
+      "load_duration": 88569583,
+      "parsed": {
+        "answer": "",
+        "citations": [],
+        "abstain": true
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "success": true,
+      "abstention_correct": true,
+      "evidence_complete": null
+    },
+    {
+      "case_id": "insufficient-evidence",
+      "think": false,
+      "question": "How many db-primary connections are currently available?",
+      "expected_answers": [],
+      "expected_abstain": true,
+      "expected_evidence_ids": [],
+      "model": "qwen3:14b",
+      "latency_ms": 731.1532410003565,
+      "response": "{\"answer\": \"\", \"citations\": [], \"abstain\": true}",
+      "done_reason": "stop",
+      "prompt_eval_count": 143,
+      "eval_count": 17,
+      "total_duration": 729941370,
+      "load_duration": 84081122,
+      "parsed": {
+        "answer": "",
+        "citations": [],
+        "abstain": true
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "success": true,
+      "abstention_correct": true,
+      "evidence_complete": null
+    },
+    {
+      "case_id": "remaining-capacity",
+      "think": false,
+      "question": "The partner API permits 100 requests per minute and checkout already sent 37 this minute. How many more may it send this minute?",
+      "expected_answers": [
+        "63"
+      ],
+      "expected_abstain": false,
+      "expected_evidence_ids": [
+        "M1",
+        "M2"
+      ],
+      "model": "qwen3:14b",
+      "latency_ms": 1191.3254319988482,
+      "response": "{\"answer\": \"63\", \"citations\": [\"M1\", \"M2\"], \"abstain\": false}",
+      "done_reason": "stop",
+      "prompt_eval_count": 181,
+      "eval_count": 27,
+      "total_duration": 1185688667,
+      "load_duration": 90179013,
+      "parsed": {
+        "answer": "63",
+        "citations": [
+          "M1",
+          "M2"
+        ],
+        "abstain": false
+      },
+      "error": null,
+      "exact_match": 1.0,
+      "alias_containment": 1.0,
+      "token_f1": 1.0,
+      "success": true,
+      "abstention_correct": true,
+      "evidence_complete": true
+    },
+    {
+      "case_id": "capacity",
+      "think": true,
+      "question": "checkout-api has 8 workers. Each worker handles 30 requests per second. What is total capacity in requests per second?",
+      "expected_answers": [
+        "240"
+      ],
+      "expected_abstain": false,
+      "expected_evidence_ids": [
+        "M1",
+        "M2"
+      ],
+      "model": "qwen3:14b",
+      "latency_ms": 389.5771000006789,
+      "response": "{}",
+      "done_reason": "stop",
+      "prompt_eval_count": 165,
+      "eval_count": 2,
+      "total_duration": 388370397,
+      "load_duration": 162449642,
+      "parsed": null,
+      "error": "invalid_answer_json",
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "success": false,
+      "abstention_correct": false,
+      "evidence_complete": false
+    },
+    {
+      "case_id": "timeout-chain",
+      "think": true,
+      "question": "Which service should be checked first for checkout-api timeouts?",
+      "expected_answers": [
+        "db-primary"
+      ],
+      "expected_abstain": false,
+      "expected_evidence_ids": [
+        "M1",
+        "M2",
+        "M3"
+      ],
+      "model": "qwen3:14b",
+      "latency_ms": 310.74241700116545,
+      "response": "{}",
+      "done_reason": "stop",
+      "prompt_eval_count": 165,
+      "eval_count": 2,
+      "total_duration": 309279482,
+      "load_duration": 91232124,
+      "parsed": null,
+      "error": "invalid_answer_json",
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "success": false,
+      "abstention_correct": false,
+      "evidence_complete": false
+    },
+    {
+      "case_id": "historical-setting",
+      "think": true,
+      "question": "What was checkout-api's timeout on 2026-09-30, in seconds?",
+      "expected_answers": [
+        "2"
+      ],
+      "expected_abstain": false,
+      "expected_evidence_ids": [
+        "M1",
+        "M2"
+      ],
+      "model": "qwen3:14b",
+      "latency_ms": 325.4112249996979,
+      "response": "{}",
+      "done_reason": "stop",
+      "prompt_eval_count": 182,
+      "eval_count": 2,
+      "total_duration": 324105082,
+      "load_duration": 88140864,
+      "parsed": null,
+      "error": "invalid_answer_json",
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "success": false,
+      "abstention_correct": false,
+      "evidence_complete": false
+    },
+    {
+      "case_id": "equal-authority-conflict",
+      "think": true,
+      "question": "What is the current checkout-api timeout in seconds?",
+      "expected_answers": [],
+      "expected_abstain": true,
+      "expected_evidence_ids": [],
+      "model": "qwen3:14b",
+      "latency_ms": 309.71358199894894,
+      "response": "{}",
+      "done_reason": "stop",
+      "prompt_eval_count": 160,
+      "eval_count": 2,
+      "total_duration": 308550571,
+      "load_duration": 86927294,
+      "parsed": null,
+      "error": "invalid_answer_json",
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "success": false,
+      "abstention_correct": false,
+      "evidence_complete": null
+    },
+    {
+      "case_id": "insufficient-evidence",
+      "think": true,
+      "question": "How many db-primary connections are currently available?",
+      "expected_answers": [],
+      "expected_abstain": true,
+      "expected_evidence_ids": [],
+      "model": "qwen3:14b",
+      "latency_ms": 315.9861940002884,
+      "response": "{}",
+      "done_reason": "stop",
+      "prompt_eval_count": 137,
+      "eval_count": 2,
+      "total_duration": 314696611,
+      "load_duration": 94069244,
+      "parsed": null,
+      "error": "invalid_answer_json",
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "success": false,
+      "abstention_correct": false,
+      "evidence_complete": null
+    },
+    {
+      "case_id": "remaining-capacity",
+      "think": true,
+      "question": "The partner API permits 100 requests per minute and checkout already sent 37 this minute. How many more may it send this minute?",
+      "expected_answers": [
+        "63"
+      ],
+      "expected_abstain": false,
+      "expected_evidence_ids": [
+        "M1",
+        "M2"
+      ],
+      "model": "qwen3:14b",
+      "latency_ms": 327.4215010005719,
+      "response": "{}",
+      "done_reason": "stop",
+      "prompt_eval_count": 175,
+      "eval_count": 2,
+      "total_duration": 326095988,
+      "load_duration": 90790742,
+      "parsed": null,
+      "error": "invalid_answer_json",
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "success": false,
+      "abstention_correct": false,
+      "evidence_complete": false
+    }
+  ],
+  "request_format": "json",
+  "interpretation": "JSON-constraint integration diagnostic, superseded by prompt-only JSON reasoning comparison; not an isolated reasoning ability result."
+}

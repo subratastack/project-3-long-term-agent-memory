@@ -1,0 +1,336 @@
+{
+  "track": "forgetting",
+  "created_at": "2026-10-04T00:16:33.383649+00:00",
+  "implementation_sha256": "7824cc1d753017577d5cf77a9d8aacaaab7d4555b7d19bd3949bb7e7f031c286",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39"
+  },
+  "fixture_sha256": "ea3aa36b28776bcb881032b97a40ab457e61a7a721206e0727b92171b08ce984",
+  "evaluation_time": "2026-10-01 00:00:00+00:00",
+  "database_mode": "rollback-only PostgreSQL, fresh tenants",
+  "summary": {
+    "checks": 17,
+    "passed": 17,
+    "pass_rate": 1
+  },
+  "results": [
+    {
+      "case_id": "episode-grace-boundary",
+      "expected": {
+        "id": "episode-grace-boundary",
+        "age_days": 30,
+        "confidence": 0.5,
+        "type": "episodic",
+        "expected_status": "active",
+        "expected_priority": 1
+      },
+      "observed": {
+        "status": "active",
+        "priority": 1.0,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [],
+        "decayed": [],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "episode-one-half-life",
+      "expected": {
+        "id": "episode-one-half-life",
+        "age_days": 120,
+        "confidence": 0.5,
+        "type": "episodic",
+        "expected_status": "active",
+        "expected_priority": 0.5
+      },
+      "observed": {
+        "status": "active",
+        "priority": 0.5,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [],
+        "decayed": [
+          "ecb0a9e7-324a-43b5-b7dd-d127cc6e7dc6"
+        ],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "episode-two-half-lives",
+      "expected": {
+        "id": "episode-two-half-lives",
+        "age_days": 210,
+        "confidence": 0.5,
+        "type": "episodic",
+        "expected_status": "active",
+        "expected_priority": 0.25
+      },
+      "observed": {
+        "status": "active",
+        "priority": 0.25,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [],
+        "decayed": [
+          "7f4bd046-d5da-4a78-9d74-452050518346"
+        ],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "episode-priority-floor",
+      "expected": {
+        "id": "episode-priority-floor",
+        "age_days": 2000,
+        "confidence": 0.5,
+        "type": "episodic",
+        "expected_status": "active",
+        "expected_priority": 0.05
+      },
+      "observed": {
+        "status": "active",
+        "priority": 0.05,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [],
+        "decayed": [
+          "c63883f1-8b86-4045-85bf-ca41f163f232"
+        ],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "high-confidence-retention",
+      "expected": {
+        "id": "high-confidence-retention",
+        "age_days": 210,
+        "confidence": 0.8,
+        "type": "episodic",
+        "expected_status": "active",
+        "expected_priority": 1
+      },
+      "observed": {
+        "status": "active",
+        "priority": 1.0,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [],
+        "decayed": [],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "semantic-retention",
+      "expected": {
+        "id": "semantic-retention",
+        "age_days": 210,
+        "confidence": 0.5,
+        "type": "semantic",
+        "expected_status": "active",
+        "expected_priority": 1
+      },
+      "observed": {
+        "status": "active",
+        "priority": 1.0,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [],
+        "decayed": [],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "procedural-retention",
+      "expected": {
+        "id": "procedural-retention",
+        "age_days": 210,
+        "confidence": 0.5,
+        "type": "procedural",
+        "expected_status": "active",
+        "expected_priority": 1
+      },
+      "observed": {
+        "status": "active",
+        "priority": 1.0,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [],
+        "decayed": [],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "expiry",
+      "expected": {
+        "id": "expiry",
+        "age_days": 10,
+        "confidence": 0.9,
+        "type": "episodic",
+        "valid_to_days_ago": 1,
+        "expected_status": "expired",
+        "expected_priority": 1
+      },
+      "observed": {
+        "status": "expired",
+        "priority": 1.0,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [
+          "99c679a6-cc9c-431b-9d44-166ef4e58970"
+        ],
+        "decayed": [],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "expiry-history",
+      "expected": {
+        "current_hits": 0,
+        "historical_hits": 1
+      },
+      "observed": {
+        "current_hits": 0,
+        "historical_hits": 1
+      },
+      "success": true
+    },
+    {
+      "case_id": "inclusive-valid-to",
+      "expected": {
+        "id": "inclusive-valid-to",
+        "age_days": 10,
+        "confidence": 0.9,
+        "type": "episodic",
+        "valid_to_days_ago": 0,
+        "expected_status": "active",
+        "expected_priority": 1
+      },
+      "observed": {
+        "status": "active",
+        "priority": 1.0,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [],
+        "decayed": [],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "quarantine-preserved",
+      "expected": {
+        "id": "quarantine-preserved",
+        "age_days": 210,
+        "confidence": 0.5,
+        "type": "episodic",
+        "status": "quarantined",
+        "expected_status": "quarantined",
+        "expected_priority": 1
+      },
+      "observed": {
+        "status": "quarantined",
+        "priority": 1.0,
+        "audit_evidence_retained": true,
+        "idempotent": true
+      },
+      "maintenance_changes": {
+        "expired": [],
+        "decayed": [],
+        "compacted": []
+      },
+      "success": true
+    },
+    {
+      "case_id": "derived-summary-compaction",
+      "expected": {
+        "priority": 0.25
+      },
+      "observed": {
+        "priority": 0.25,
+        "changes": {
+          "expired": [],
+          "decayed": [],
+          "compacted": [
+            "3a90e2e0-e9df-4aa3-9a52-599c8178a18f"
+          ]
+        }
+      },
+      "success": true
+    },
+    {
+      "case_id": "tombstone-evidence-cascade",
+      "expected": {
+        "tombstones": 2
+      },
+      "observed": {
+        "changed_ids": [
+          "3a90e2e0-e9df-4aa3-9a52-599c8178a18f",
+          "4f6380e9-fb32-46a0-b14a-a2f51a1b079c"
+        ],
+        "states": [
+          "tombstone",
+          "tombstone"
+        ]
+      },
+      "success": true
+    },
+    {
+      "case_id": "tombstone-idempotence",
+      "expected": [],
+      "observed": [],
+      "success": true
+    },
+    {
+      "case_id": "tombstone-search-block",
+      "expected": {
+        "current": 0,
+        "historical": 0
+      },
+      "observed": {
+        "current": 0,
+        "historical": 0
+      },
+      "success": true
+    },
+    {
+      "case_id": "tenant-isolation",
+      "expected": "active",
+      "observed": "active",
+      "success": true
+    },
+    {
+      "case_id": "tombstone-evidence-reuse",
+      "expected": "blocked",
+      "observed": "blocked",
+      "success": true
+    }
+  ]
+}

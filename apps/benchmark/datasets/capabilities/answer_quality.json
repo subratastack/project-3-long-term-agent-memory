@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "track": "answer_quality",
+  "samples": "data/benchmarks/memory_agent_bench/samples.jsonl",
+  "retrieval_results": "docs/reports/memory-agent-bench-retrieval-initial.json",
+  "strategy": "hybrid_reranked",
+  "questions_per_source": 2,
+  "top_k": 5,
+  "token_budget": 2000,
+  "arms": [
+    "no_memory",
+    "retrieved_memory"
+  ],
+  "origin": "Reuse the first two selected queries per source from the measured retrieval run; no selection by relevance or answer quality."
+}

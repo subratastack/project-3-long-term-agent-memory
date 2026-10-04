@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "track": "reasoning",
+  "origin": "Authored checkout-api diagnostic cases; gold labels are independent of model output.",
+  "cases": [
+    {
+      "id": "capacity",
+      "question": "checkout-api has 8 workers. Each worker handles 30 requests per second. What is total capacity in requests per second?",
+      "evidence": [
+        {
+          "id": "M1",
+          "text": "checkout-api has 8 workers."
+        },
+        {
+          "id": "M2",
+          "text": "Each worker handles 30 requests per second."
+        }
+      ],
+      "answers": [
+        "240"
+      ],
+      "evidence_ids": [
+        "M1",
+        "M2"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "timeout-chain",
+      "question": "Which service should be checked first for checkout-api timeouts?",
+      "evidence": [
+        {
+          "id": "M1",
+          "text": "checkout-api calls payments-gateway."
+        },
+        {
+          "id": "M2",
+          "text": "payments-gateway depends on db-primary."
+        },
+        {
+          "id": "M3",
+          "text": "For a timeout, check the downstream database before changing any service timeout."
+        }
+      ],
+      "answers": [
+        "db-primary"
+      ],
+      "evidence_ids": [
+        "M1",
+        "M2",
+        "M3"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "historical-setting",
+      "question": "What was checkout-api's timeout on 2026-09-30, in seconds?",
+      "evidence": [
+        {
+          "id": "M1",
+          "text": "The timeout was 2 seconds through 2026-09-30."
+        },
+        {
+          "id": "M2",
+          "text": "The timeout became 5 seconds on 2026-10-01."
+        }
+      ],
+      "answers": [
+        "2"
+      ],
+      "evidence_ids": [
+        "M1",
+        "M2"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "equal-authority-conflict",
+      "question": "What is the current checkout-api timeout in seconds?",
+      "evidence": [
+        {
+          "id": "M1",
+          "text": "Current configuration A: timeout is 2 seconds. Authority: system."
+        },
+        {
+          "id": "M2",
+          "text": "Current configuration B: timeout is 5 seconds. Authority: system."
+        }
+      ],
+      "answers": [],
+      "evidence_ids": [],
+      "abstain": true
+    },
+    {
+      "id": "insufficient-evidence",
+      "question": "How many db-primary connections are currently available?",
+      "evidence": [
+        {
+          "id": "M1",
+          "text": "checkout-api's timeout is 2 seconds."
+        }
+      ],
+      "answers": [],
+      "evidence_ids": [],
+      "abstain": true
+    },
+    {
+      "id": "remaining-capacity",
+      "question": "The partner API permits 100 requests per minute and checkout already sent 37 this minute. How many more may it send this minute?",
+      "evidence": [
+        {
+          "id": "M1",
+          "text": "The partner API allows 100 requests per minute."
+        },
+        {
+          "id": "M2",
+          "text": "checkout sent 37 requests in the current minute."
+        }
+      ],
+      "answers": [
+        "63"
+      ],
+      "evidence_ids": [
+        "M1",
+        "M2"
+      ],
+      "abstain": false
+    }
+  ]
+}

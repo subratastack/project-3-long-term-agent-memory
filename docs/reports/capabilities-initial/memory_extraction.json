@@ -1,0 +1,553 @@
+{
+  "track": "memory_extraction",
+  "created_at": "2026-10-04T00:17:17.107450+00:00",
+  "implementation_sha256": "7824cc1d753017577d5cf77a9d8aacaaab7d4555b7d19bd3949bb7e7f031c286",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39"
+  },
+  "model": {
+    "ollama_version": "0.20.0",
+    "name": "qwen2.5:7b-instruct",
+    "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "qwen2",
+      "families": [
+        "qwen2"
+      ],
+      "parameter_size": "7.6B",
+      "quantization_level": "Q4_K_M"
+    },
+    "capabilities": [
+      "completion",
+      "tools"
+    ],
+    "options": {
+      "temperature": 0,
+      "seed": 42,
+      "num_ctx": 8192,
+      "num_predict": 2048
+    }
+  },
+  "fixture_sha256": "772b5933454f1aa0a473f6e62c973d5f543d7f479df314c28c4e8037566280f9",
+  "summary": {
+    "cases": 6,
+    "gold_facts": 6,
+    "proposals": 5,
+    "matched": 4,
+    "precision": 0.8,
+    "recall": 0.6666666666666666,
+    "f1": 0.7272727272727272,
+    "citation_correct_rate": 0.8,
+    "type_accuracy_on_matches": 1.0,
+    "unmatched_proposals": 1,
+    "active_admissions": 5,
+    "http_errors": 0
+  },
+  "results": [
+    {
+      "case_id": "configuration",
+      "events": [
+        {
+          "event_id": "14469601-595a-413f-9d33-972cd381440d",
+          "tenant_id": "7cffd303-3a29-44eb-af89-1f70d3d5637d",
+          "source_type": "configuration",
+          "source_reference": "configuration:0",
+          "content": "checkout-api timeout=2s",
+          "observed_at": "2026-10-04T00:17:01.476684Z",
+          "actor_id": null,
+          "metadata": {}
+        }
+      ],
+      "expected_facts": [
+        {
+          "id": "timeout",
+          "groups": [
+            [
+              "checkout",
+              "checkout-api"
+            ],
+            [
+              "timeout"
+            ],
+            [
+              "2",
+              "two"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "semantic"
+        }
+      ],
+      "matched": 1,
+      "proposals": [
+        {
+          "raw": {
+            "content": "The checkout API has a configured timeout of 2 seconds.",
+            "source_event_ids": [
+              "14469601-595a-413f-9d33-972cd381440d"
+            ],
+            "memory_type_hint": "semantic",
+            "proposed_trust_level": null,
+            "subject_keys": [
+              "timeout"
+            ],
+            "confidence": 0.9,
+            "metadata": {}
+          },
+          "matched_fact": "timeout",
+          "citation_correct": true,
+          "classified_type": "semantic",
+          "type_correct": true,
+          "normalization_rejection": null,
+          "decision": {
+            "decision_id": "ef80117f-f6db-4f3c-9a9e-6ec0146244e4",
+            "tenant_id": "7cffd303-3a29-44eb-af89-1f70d3d5637d",
+            "candidate_id": "10447676-8109-4dfd-a28d-477f92191fab",
+            "decision": "accept",
+            "decided_at": "2026-10-04T05:47:04.440599",
+            "policy_version": "1.1",
+            "reason_codes": [
+              "TRUSTED_SEMANTIC_CLAIM"
+            ],
+            "explanation": "Semantic claim is backed by sufficiently trusted evidence.",
+            "accepted_memory_id": null,
+            "superseded_memory_id": null
+          }
+        }
+      ],
+      "error": null,
+      "call": {
+        "model": "qwen2.5:7b-instruct",
+        "think": null,
+        "request_format": "json",
+        "thinking_returned": false,
+        "latency_ms": 2963.4807049988012,
+        "response": "{\"candidates\": [{\"content\": \"The checkout API has a configured timeout of 2 seconds.\", \"source_event_ids\": [\"14469601-595a-413f-9d33-972cd381440d\"], \"memory_type_hint\": \"semantic\", \"confidence\": 0.9, \"subject_keys\": [\"timeout\"]}]}",
+        "done_reason": "stop",
+        "prompt_eval_count": 244,
+        "eval_count": 87,
+        "total_duration": 2960311753,
+        "load_duration": 97416727
+      }
+    },
+    {
+      "case_id": "incident",
+      "events": [
+        {
+          "event_id": "57e506d8-fcdd-4457-97dd-6f1b8ae76c63",
+          "tenant_id": "45c9874b-642e-4ca8-8f6c-700e59a7c94c",
+          "source_type": "system_event",
+          "source_reference": "incident:0",
+          "content": "Incident INC-3101: checkout-api requests timed out for 8 minutes during peak traffic.",
+          "observed_at": "2026-10-04T00:17:04.440685Z",
+          "actor_id": null,
+          "metadata": {}
+        }
+      ],
+      "expected_facts": [
+        {
+          "id": "incident",
+          "groups": [
+            [
+              "checkout",
+              "checkout-api"
+            ],
+            [
+              "8",
+              "eight"
+            ],
+            [
+              "timeout",
+              "timed out"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "episodic"
+        }
+      ],
+      "matched": 1,
+      "proposals": [
+        {
+          "raw": {
+            "content": "Checkout API requests experienced a timeout of 8 minutes during peak traffic.",
+            "source_event_ids": [
+              "57e506d8-fcdd-4457-97dd-6f1b8ae76c63"
+            ],
+            "memory_type_hint": "episodic",
+            "proposed_trust_level": null,
+            "subject_keys": [
+              "timeout",
+              "traffic"
+            ],
+            "confidence": 0.8,
+            "metadata": {}
+          },
+          "matched_fact": "incident",
+          "citation_correct": true,
+          "classified_type": "episodic",
+          "type_correct": true,
+          "normalization_rejection": null,
+          "decision": {
+            "decision_id": "7d9a8462-5503-4be5-a760-d80a3bfb212d",
+            "tenant_id": "45c9874b-642e-4ca8-8f6c-700e59a7c94c",
+            "candidate_id": "3fd483fc-913c-44f6-b58e-82c81d227f41",
+            "decision": "accept",
+            "decided_at": "2026-10-04T05:47:07.607863",
+            "policy_version": "1.1",
+            "reason_codes": [
+              "TRUSTED_EPISODIC_EVIDENCE"
+            ],
+            "explanation": "Episodic memory is backed by sufficiently trusted evidence.",
+            "accepted_memory_id": null,
+            "superseded_memory_id": null
+          }
+        }
+      ],
+      "error": null,
+      "call": {
+        "model": "qwen2.5:7b-instruct",
+        "think": null,
+        "request_format": "json",
+        "thinking_returned": false,
+        "latency_ms": 3166.663652000352,
+        "response": "{\"candidates\": [{\"content\": \"Checkout API requests experienced a timeout of 8 minutes during peak traffic.\", \"source_event_ids\": [\"57e506d8-fcdd-4457-97dd-6f1b8ae76c63\"], \"memory_type_hint\": \"episodic\", \"confidence\": 0.8, \"subject_keys\": [\"timeout\", \"traffic\"]}]}",
+        "done_reason": "stop",
+        "prompt_eval_count": 257,
+        "eval_count": 91,
+        "total_duration": 3162688852,
+        "load_duration": 94132847
+      }
+    },
+    {
+      "case_id": "preference",
+      "events": [
+        {
+          "event_id": "04fc1f2f-3c46-437d-9d17-68371e303a98",
+          "tenant_id": "a1100dea-e890-4b4e-ba3e-3e5a47c918ed",
+          "source_type": "user_message",
+          "source_reference": "preference:0",
+          "content": "Please remember that I prefer UTC timestamps in incident reports.",
+          "observed_at": "2026-10-04T00:17:07.607965Z",
+          "actor_id": null,
+          "metadata": {}
+        }
+      ],
+      "expected_facts": [
+        {
+          "id": "utc",
+          "groups": [
+            [
+              "utc"
+            ],
+            [
+              "prefer",
+              "preference"
+            ],
+            [
+              "timestamp",
+              "time"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "episodic"
+        }
+      ],
+      "matched": 0,
+      "proposals": [
+        {
+          "raw": {
+            "content": "The user prefers UTC timestamps for incident reports.",
+            "source_event_ids": [
+              "04fc1f2f-3c46-437d-9d17-68371e303a98"
+            ],
+            "memory_type_hint": "semantic",
+            "proposed_trust_level": null,
+            "subject_keys": [
+              "timestamp",
+              "UTC"
+            ],
+            "confidence": 0.9,
+            "metadata": {}
+          },
+          "matched_fact": null,
+          "citation_correct": false,
+          "classified_type": "episodic",
+          "type_correct": null,
+          "normalization_rejection": null,
+          "decision": {
+            "decision_id": "d7fd62c6-62fc-47df-b1f6-c32289f607bf",
+            "tenant_id": "a1100dea-e890-4b4e-ba3e-3e5a47c918ed",
+            "candidate_id": "5d1b3a77-acc0-4491-9171-8399f64a2857",
+            "decision": "accept",
+            "decided_at": "2026-10-04T05:47:10.447060",
+            "policy_version": "1.1",
+            "reason_codes": [
+              "TRUSTED_EPISODIC_EVIDENCE"
+            ],
+            "explanation": "Episodic memory is backed by sufficiently trusted evidence.",
+            "accepted_memory_id": null,
+            "superseded_memory_id": null
+          }
+        }
+      ],
+      "error": null,
+      "call": {
+        "model": "qwen2.5:7b-instruct",
+        "think": null,
+        "request_format": "json",
+        "thinking_returned": false,
+        "latency_ms": 2838.6254020006163,
+        "response": "{\"candidates\": [{\"content\": \"The user prefers UTC timestamps for incident reports.\", \"source_event_ids\": [\"04fc1f2f-3c46-437d-9d17-68371e303a98\"], \"memory_type_hint\": \"semantic\", \"confidence\": 0.9, \"subject_keys\": [\"timestamp\", \"UTC\"]}]}",
+        "done_reason": "stop",
+        "prompt_eval_count": 248,
+        "eval_count": 87,
+        "total_duration": 2835025656,
+        "load_duration": 90273559
+      }
+    },
+    {
+      "case_id": "two-config-facts",
+      "events": [
+        {
+          "event_id": "cfd6884f-68d0-4d29-ac81-c5ff8333a630",
+          "tenant_id": "1d9522dc-bf0d-4b66-89e1-e482c1627efe",
+          "source_type": "configuration",
+          "source_reference": "two-config-facts:0",
+          "content": "checkout-api timeout=5s; db-primary pool_size=50",
+          "observed_at": "2026-10-04T00:17:10.447152Z",
+          "actor_id": null,
+          "metadata": {}
+        }
+      ],
+      "expected_facts": [
+        {
+          "id": "timeout",
+          "groups": [
+            [
+              "checkout",
+              "checkout-api"
+            ],
+            [
+              "timeout"
+            ],
+            [
+              "5",
+              "five"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "semantic"
+        },
+        {
+          "id": "pool",
+          "groups": [
+            [
+              "db-primary",
+              "database"
+            ],
+            [
+              "pool"
+            ],
+            [
+              "50",
+              "fifty"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "semantic"
+        }
+      ],
+      "matched": 1,
+      "proposals": [
+        {
+          "raw": {
+            "content": "The checkout-api has a configured timeout of 5 seconds and the db-primary database connection pool size is set to 50.",
+            "source_event_ids": [
+              "cfd6884f-68d0-4d29-ac81-c5ff8333a630"
+            ],
+            "memory_type_hint": "semantic",
+            "proposed_trust_level": null,
+            "subject_keys": [
+              "timeout",
+              "pool_size"
+            ],
+            "confidence": 0.9,
+            "metadata": {}
+          },
+          "matched_fact": "timeout",
+          "citation_correct": true,
+          "classified_type": "semantic",
+          "type_correct": true,
+          "normalization_rejection": null,
+          "decision": {
+            "decision_id": "0eea99ae-b8e4-4190-b6e6-7d2a1f7b1079",
+            "tenant_id": "1d9522dc-bf0d-4b66-89e1-e482c1627efe",
+            "candidate_id": "b4e9652e-a0fc-4b01-9318-0712042df931",
+            "decision": "accept",
+            "decided_at": "2026-10-04T05:47:13.713554",
+            "policy_version": "1.1",
+            "reason_codes": [
+              "TRUSTED_SEMANTIC_CLAIM"
+            ],
+            "explanation": "Semantic claim is backed by sufficiently trusted evidence.",
+            "accepted_memory_id": null,
+            "superseded_memory_id": null
+          }
+        }
+      ],
+      "error": null,
+      "call": {
+        "model": "qwen2.5:7b-instruct",
+        "think": null,
+        "request_format": "json",
+        "thinking_returned": false,
+        "latency_ms": 3265.9445040007995,
+        "response": "{\"candidates\": [{\"content\": \"The checkout-api has a configured timeout of 5 seconds and the db-primary database connection pool size is set to 50.\", \"source_event_ids\": [\"cfd6884f-68d0-4d29-ac81-c5ff8333a630\"], \"memory_type_hint\": \"semantic\", \"confidence\": 0.9, \"subject_keys\": [\"timeout\", \"pool_size\"]}]}",
+        "done_reason": "stop",
+        "prompt_eval_count": 247,
+        "eval_count": 101,
+        "total_duration": 3262494601,
+        "load_duration": 96570943
+      }
+    },
+    {
+      "case_id": "runbook",
+      "events": [
+        {
+          "event_id": "83d3ef18-ea41-4071-acb0-0b29f0e51f81",
+          "tenant_id": "016fda05-0692-421c-bc16-9d13f8992aea",
+          "source_type": "configuration",
+          "source_reference": "runbook:0",
+          "content": "Approved checkout-api procedure: first inspect payments-gateway pool saturation, then increase the pool size only if saturation is confirmed.",
+          "observed_at": "2026-10-04T00:17:13.713634Z",
+          "actor_id": null,
+          "metadata": {
+            "approved_by": "platform-admin"
+          }
+        }
+      ],
+      "expected_facts": [
+        {
+          "id": "pool-check",
+          "groups": [
+            [
+              "checkout",
+              "checkout-api"
+            ],
+            [
+              "payments",
+              "gateway"
+            ],
+            [
+              "pool"
+            ],
+            [
+              "saturation",
+              "saturated"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "semantic"
+        }
+      ],
+      "matched": 1,
+      "proposals": [
+        {
+          "raw": {
+            "content": "The checkout-api procedure involves inspecting the payments-gateway pool saturation before deciding to increase the pool size.",
+            "source_event_ids": [
+              "83d3ef18-ea41-4071-acb0-0b29f0e51f81"
+            ],
+            "memory_type_hint": "semantic",
+            "proposed_trust_level": null,
+            "subject_keys": [
+              "checkout-api procedure"
+            ],
+            "confidence": 0.9,
+            "metadata": {}
+          },
+          "matched_fact": "pool-check",
+          "citation_correct": true,
+          "classified_type": "semantic",
+          "type_correct": true,
+          "normalization_rejection": null,
+          "decision": {
+            "decision_id": "824e50bf-681c-436c-9f43-c44364cf3473",
+            "tenant_id": "016fda05-0692-421c-bc16-9d13f8992aea",
+            "candidate_id": "8bf09419-a20e-4ad9-80f0-fddf61622563",
+            "decision": "accept",
+            "decided_at": "2026-10-04T05:47:16.808279",
+            "policy_version": "1.1",
+            "reason_codes": [
+              "TRUSTED_SEMANTIC_CLAIM"
+            ],
+            "explanation": "Semantic claim is backed by sufficiently trusted evidence.",
+            "accepted_memory_id": null,
+            "superseded_memory_id": null
+          }
+        }
+      ],
+      "error": null,
+      "call": {
+        "model": "qwen2.5:7b-instruct",
+        "think": null,
+        "request_format": "json",
+        "thinking_returned": false,
+        "latency_ms": 3094.074496999383,
+        "response": "{\"candidates\": [{\"content\": \"The checkout-api procedure involves inspecting the payments-gateway pool saturation before deciding to increase the pool size.\", \"source_event_ids\": [\"83d3ef18-ea41-4071-acb0-0b29f0e51f81\"], \"memory_type_hint\": \"semantic\", \"confidence\": 0.9, \"subject_keys\": [\"checkout-api procedure\"]}]}",
+        "done_reason": "stop",
+        "prompt_eval_count": 258,
+        "eval_count": 95,
+        "total_duration": 3090895792,
+        "load_duration": 97206464
+      }
+    },
+    {
+      "case_id": "noise",
+      "events": [
+        {
+          "event_id": "f9d7f68a-e443-449d-9336-78aaf23ac005",
+          "tenant_id": "2be813f8-52e2-498f-af5c-e30fd50e7836",
+          "source_type": "user_message",
+          "source_reference": "noise:0",
+          "content": "Hello! Thanks.",
+          "observed_at": "2026-10-04T00:17:16.808366Z",
+          "actor_id": null,
+          "metadata": {}
+        }
+      ],
+      "expected_facts": [],
+      "matched": 0,
+      "proposals": [],
+      "error": null,
+      "call": {
+        "model": "qwen2.5:7b-instruct",
+        "think": null,
+        "request_format": "json",
+        "thinking_returned": false,
+        "latency_ms": 298.84762599976966,
+        "response": "{\"candidates\": []}",
+        "done_reason": "stop",
+        "prompt_eval_count": 238,
+        "eval_count": 6,
+        "total_duration": 295583075,
+        "load_duration": 97893074
+      }
+    }
+  ]
+}

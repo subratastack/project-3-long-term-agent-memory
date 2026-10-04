@@ -27,6 +27,9 @@ dependencies = [
   "uvicorn[standard]>=0.35,<1",
 ]
 
+[project.optional-dependencies]
+benchmark = ["datasets>=4,<5", "huggingface-hub>=0.34,<2"]
+
 [dependency-groups]
 dev = [
   "hypothesis>=6.138,<7",

@@ -1,0 +1,14 @@
+{
+  "ks": [1, 5, 10],
+  "strategies": ["lexical", "semantic", "hybrid", "hybrid_reranked"],
+  "sources": ["ruler_qa1_*", "ruler_qa2_*", "longmemeval_s*"],
+  "max_samples_per_source": 1,
+  "max_queries_per_sample": 20,
+  "candidate_limit": 30,
+  "repeats": 1,
+  "seed": 42,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "reranking_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+  "device": "cpu",
+  "torch_threads": 4
+}

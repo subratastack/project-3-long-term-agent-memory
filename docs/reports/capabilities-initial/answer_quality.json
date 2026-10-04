@@ -1,0 +1,658 @@
+{
+  "track": "answer_quality",
+  "created_at": "2026-10-04T00:17:01.371235+00:00",
+  "implementation_sha256": "7824cc1d753017577d5cf77a9d8aacaaab7d4555b7d19bd3949bb7e7f031c286",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39"
+  },
+  "model": {
+    "ollama_version": "0.20.0",
+    "name": "qwen2.5:7b-instruct",
+    "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "qwen2",
+      "families": [
+        "qwen2"
+      ],
+      "parameter_size": "7.6B",
+      "quantization_level": "Q4_K_M"
+    },
+    "capabilities": [
+      "completion",
+      "tools"
+    ],
+    "options": {
+      "temperature": 0,
+      "seed": 42,
+      "num_ctx": 8192,
+      "num_predict": 2048
+    }
+  },
+  "fixture_sha256": "55e5a4d7a313c5a2d21ce96778bfbcf48d727f272328839290fe9309475583bb",
+  "samples_sha256": "1c45a94dd395efd118f51a0060ad6bb65650937d15f176acbfa4281313049e4f",
+  "retrieval_sha256": "19bfbb666660e32207a9ca0a80002dad6384eca8e7a013406b6ec28261b5ca32",
+  "retrieval_manifest": {
+    "schema_version": "retrieval-dataset-v1",
+    "adapter_version": "memory-agent-bench-v1",
+    "dataset_id": "ai-hyz/MemoryAgentBench",
+    "revision": "7ea066982b140a19337e17e60d45d4076e042faf",
+    "split": "Accurate_Retrieval",
+    "source_url": "https://huggingface.co/datasets/ai-hyz/MemoryAgentBench/resolve/7ea066982b140a19337e17e60d45d4076e042faf/data/Accurate_Retrieval-00000-of-00001.parquet",
+    "raw_sha256": "56c3cd80fb6731a3e53cd1a6be3148f54df60ff2d290ee50e28f8acebf9655c1",
+    "samples_sha256": "1c45a94dd395efd118f51a0060ad6bb65650937d15f176acbfa4281313049e4f",
+    "chunk_words": 128,
+    "overlap_words": 32,
+    "sample_count": 22,
+    "question_count": 2000,
+    "scored_question_count": 485
+  },
+  "profile": {
+    "version": 1,
+    "track": "answer_quality",
+    "samples": "data/benchmarks/memory_agent_bench/samples.jsonl",
+    "retrieval_results": "docs/reports/memory-agent-bench-retrieval-initial.json",
+    "strategy": "hybrid_reranked",
+    "questions_per_source": 2,
+    "top_k": 5,
+    "token_budget": 2000,
+    "arms": [
+      "no_memory",
+      "retrieved_memory"
+    ],
+    "origin": "Reuse the first two selected queries per source from the measured retrieval run; no selection by relevance or answer quality."
+  },
+  "summary": [
+    {
+      "source": "ruler_qa1_197K",
+      "arm": "no_memory",
+      "questions": 2,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "proxy_evidence_hit": 0,
+      "citation_ids_valid": 0,
+      "abstention_rate": 1,
+      "valid_json_rate": 1
+    },
+    {
+      "source": "ruler_qa1_197K",
+      "arm": "retrieved_memory",
+      "questions": 2,
+      "exact_match": 0.5,
+      "alias_containment": 0.5,
+      "token_f1": 0.9285714285714286,
+      "proxy_evidence_hit": 1,
+      "citation_ids_valid": 1,
+      "abstention_rate": 0,
+      "valid_json_rate": 1
+    },
+    {
+      "source": "ruler_qa2_421K",
+      "arm": "no_memory",
+      "questions": 2,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "proxy_evidence_hit": 0,
+      "citation_ids_valid": 0,
+      "abstention_rate": 1,
+      "valid_json_rate": 1
+    },
+    {
+      "source": "ruler_qa2_421K",
+      "arm": "retrieved_memory",
+      "questions": 2,
+      "exact_match": 0.5,
+      "alias_containment": 0.5,
+      "token_f1": 0.5,
+      "proxy_evidence_hit": 0.5,
+      "citation_ids_valid": 0.5,
+      "abstention_rate": 0.5,
+      "valid_json_rate": 1
+    },
+    {
+      "source": "longmemeval_s*",
+      "arm": "no_memory",
+      "questions": 2,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "proxy_evidence_hit": 0,
+      "citation_ids_valid": 0,
+      "abstention_rate": 1,
+      "valid_json_rate": 1
+    },
+    {
+      "source": "longmemeval_s*",
+      "arm": "retrieved_memory",
+      "questions": 2,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0,
+      "proxy_evidence_hit": 1,
+      "citation_ids_valid": 1,
+      "abstention_rate": 0,
+      "valid_json_rate": 1
+    }
+  ],
+  "results": [
+    {
+      "source": "ruler_qa1_197K",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:0",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:0:question2",
+      "question": "From which countries did the Norse originate?",
+      "answers": [
+        "Denmark, Iceland and Norway"
+      ],
+      "arm": "no_memory",
+      "label_method": "answer_span_proxy",
+      "packed_chunk_ids": [],
+      "allowed_citations": [],
+      "token_count": 0,
+      "proxy_evidence_hit": false,
+      "citation_ids_valid": false,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 2758.190825999918,
+      "response": "{\"answer\": \"\", \"citations\": [], \"abstain\": true}",
+      "done_reason": "stop",
+      "prompt_eval_count": 127,
+      "eval_count": 17,
+      "total_duration": 2755534768,
+      "load_duration": 2160263051,
+      "parsed": {
+        "answer": "",
+        "citations": [],
+        "abstain": true
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0
+    },
+    {
+      "source": "ruler_qa1_197K",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:0",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:0:question2",
+      "question": "From which countries did the Norse originate?",
+      "answers": [
+        "Denmark, Iceland and Norway"
+      ],
+      "arm": "retrieved_memory",
+      "label_method": "answer_span_proxy",
+      "packed_chunk_ids": [
+        "memory-agent-bench:Accurate_Retrieval:0:chunk345",
+        "memory-agent-bench:Accurate_Retrieval:0:chunk637",
+        "memory-agent-bench:Accurate_Retrieval:0:chunk1061",
+        "memory-agent-bench:Accurate_Retrieval:0:chunk756",
+        "memory-agent-bench:Accurate_Retrieval:0:chunk342"
+      ],
+      "allowed_citations": [
+        "1fef557b",
+        "50c39e3a",
+        "56ec124b",
+        "b5540965",
+        "e229349f"
+      ],
+      "token_count": 1156,
+      "proxy_evidence_hit": true,
+      "citation_ids_valid": true,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 1730.6201139999757,
+      "response": "{\"answer\": \"Denmark, Iceland, Norway\", \"citations\": [\"b5540965\"], \"abstain\": false}",
+      "done_reason": "stop",
+      "prompt_eval_count": 1245,
+      "eval_count": 33,
+      "total_duration": 1724683453,
+      "load_duration": 95241858,
+      "parsed": {
+        "answer": "Denmark, Iceland, Norway",
+        "citations": [
+          "b5540965"
+        ],
+        "abstain": false
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.8571428571428571
+    },
+    {
+      "source": "ruler_qa1_197K",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:0",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:0:question9",
+      "question": "When was the Latin version of the word Norman first recorded?",
+      "answers": [
+        "9th century"
+      ],
+      "arm": "no_memory",
+      "label_method": "answer_span_proxy",
+      "packed_chunk_ids": [],
+      "allowed_citations": [],
+      "token_count": 0,
+      "proxy_evidence_hit": false,
+      "citation_ids_valid": false,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 919.398441001249,
+      "response": "{\"answer\": \"\", \"citations\": [], \"abstain\": true}",
+      "done_reason": "stop",
+      "prompt_eval_count": 131,
+      "eval_count": 17,
+      "total_duration": 916100428,
+      "load_duration": 100764785,
+      "parsed": {
+        "answer": "",
+        "citations": [],
+        "abstain": true
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0
+    },
+    {
+      "source": "ruler_qa1_197K",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:0",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:0:question9",
+      "question": "When was the Latin version of the word Norman first recorded?",
+      "answers": [
+        "9th century"
+      ],
+      "arm": "retrieved_memory",
+      "label_method": "answer_span_proxy",
+      "packed_chunk_ids": [
+        "memory-agent-bench:Accurate_Retrieval:0:chunk345",
+        "memory-agent-bench:Accurate_Retrieval:0:chunk1293",
+        "memory-agent-bench:Accurate_Retrieval:0:chunk1525",
+        "memory-agent-bench:Accurate_Retrieval:0:chunk787",
+        "memory-agent-bench:Accurate_Retrieval:0:chunk756"
+      ],
+      "allowed_citations": [
+        "0e80ef42",
+        "110c98cf",
+        "8d99f1b2",
+        "96103f0e",
+        "9de173b7"
+      ],
+      "token_count": 1148,
+      "proxy_evidence_hit": true,
+      "citation_ids_valid": true,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 1578.7247089992889,
+      "response": "{\"answer\": \"9th century\", \"citations\": [\"0e80ef42\"], \"abstain\": false}",
+      "done_reason": "stop",
+      "prompt_eval_count": 1290,
+      "eval_count": 29,
+      "total_duration": 1572651342,
+      "load_duration": 95871399,
+      "parsed": {
+        "answer": "9th century",
+        "citations": [
+          "0e80ef42"
+        ],
+        "abstain": false
+      },
+      "error": null,
+      "exact_match": 1.0,
+      "alias_containment": 1.0,
+      "token_f1": 1.0
+    },
+    {
+      "source": "ruler_qa2_421K",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:1",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:1:question4",
+      "question": "The director of the romantic comedy \"Big Stone Gap\" is based in what New York city?",
+      "answers": [
+        "Greenwich Village, New York City"
+      ],
+      "arm": "no_memory",
+      "label_method": "answer_span_proxy",
+      "packed_chunk_ids": [],
+      "allowed_citations": [],
+      "token_count": 0,
+      "proxy_evidence_hit": false,
+      "citation_ids_valid": false,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 626.8133890007448,
+      "response": "{\"answer\": \"\", \"citations\": [], \"abstain\": true}",
+      "done_reason": "stop",
+      "prompt_eval_count": 138,
+      "eval_count": 17,
+      "total_duration": 623809664,
+      "load_duration": 95626699,
+      "parsed": {
+        "answer": "",
+        "citations": [],
+        "abstain": true
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0
+    },
+    {
+      "source": "ruler_qa2_421K",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:1",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:1:question4",
+      "question": "The director of the romantic comedy \"Big Stone Gap\" is based in what New York city?",
+      "answers": [
+        "Greenwich Village, New York City"
+      ],
+      "arm": "retrieved_memory",
+      "label_method": "answer_span_proxy",
+      "packed_chunk_ids": [
+        "memory-agent-bench:Accurate_Retrieval:1:chunk2209",
+        "memory-agent-bench:Accurate_Retrieval:1:chunk2208",
+        "memory-agent-bench:Accurate_Retrieval:1:chunk2412",
+        "memory-agent-bench:Accurate_Retrieval:1:chunk1331",
+        "memory-agent-bench:Accurate_Retrieval:1:chunk336"
+      ],
+      "allowed_citations": [
+        "10b47441",
+        "3595c981",
+        "35da58e5",
+        "3e0972b1",
+        "9751503f"
+      ],
+      "token_count": 1131,
+      "proxy_evidence_hit": false,
+      "citation_ids_valid": false,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 1223.684565999065,
+      "response": "{\"answer\": \"\", \"citations\": [], \"abstain\": true}",
+      "done_reason": "stop",
+      "prompt_eval_count": 1280,
+      "eval_count": 17,
+      "total_duration": 1218403084,
+      "load_duration": 98764308,
+      "parsed": {
+        "answer": "",
+        "citations": [],
+        "abstain": true
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0
+    },
+    {
+      "source": "ruler_qa2_421K",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:1",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:1:question8",
+      "question": "Who is older, Annie Morton or Terry Richardson?",
+      "answers": [
+        "Terry Richardson"
+      ],
+      "arm": "no_memory",
+      "label_method": "answer_span_proxy",
+      "packed_chunk_ids": [],
+      "allowed_citations": [],
+      "token_count": 0,
+      "proxy_evidence_hit": false,
+      "citation_ids_valid": false,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 637.3264590001781,
+      "response": "{\"answer\": \"\", \"citations\": [], \"abstain\": true}",
+      "done_reason": "stop",
+      "prompt_eval_count": 129,
+      "eval_count": 17,
+      "total_duration": 633992887,
+      "load_duration": 97744189,
+      "parsed": {
+        "answer": "",
+        "citations": [],
+        "abstain": true
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0
+    },
+    {
+      "source": "ruler_qa2_421K",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:1",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:1:question8",
+      "question": "Who is older, Annie Morton or Terry Richardson?",
+      "answers": [
+        "Terry Richardson"
+      ],
+      "arm": "retrieved_memory",
+      "label_method": "answer_span_proxy",
+      "packed_chunk_ids": [
+        "memory-agent-bench:Accurate_Retrieval:1:chunk2409",
+        "memory-agent-bench:Accurate_Retrieval:1:chunk2445",
+        "memory-agent-bench:Accurate_Retrieval:1:chunk1569",
+        "memory-agent-bench:Accurate_Retrieval:1:chunk1206",
+        "memory-agent-bench:Accurate_Retrieval:1:chunk1232"
+      ],
+      "allowed_citations": [
+        "1bd88d6f",
+        "5781fa4d",
+        "8d1c9a41",
+        "ae121950",
+        "c66b1989"
+      ],
+      "token_count": 1271,
+      "proxy_evidence_hit": true,
+      "citation_ids_valid": true,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 1636.34348999949,
+      "response": "{\"answer\": \"Terry Richardson\", \"citations\": [\"ae121950\"], \"abstain\": false}",
+      "done_reason": "stop",
+      "prompt_eval_count": 1381,
+      "eval_count": 29,
+      "total_duration": 1630123538,
+      "load_duration": 94966183,
+      "parsed": {
+        "answer": "Terry Richardson",
+        "citations": [
+          "ae121950"
+        ],
+        "abstain": false
+      },
+      "error": null,
+      "exact_match": 1.0,
+      "alias_containment": 1.0,
+      "token_f1": 1.0
+    },
+    {
+      "source": "longmemeval_s*",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:17",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:17:question0",
+      "question": "Current Date: 2023/05/27 (Sat) 22:54,\n\n Now Answer the Question: How many hours do I work in a typical week during peak campaign seasons?",
+      "answers": [
+        "50"
+      ],
+      "arm": "no_memory",
+      "label_method": "provided_turn_labels",
+      "packed_chunk_ids": [],
+      "allowed_citations": [],
+      "token_count": 0,
+      "proxy_evidence_hit": false,
+      "citation_ids_valid": false,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 653.3730350001861,
+      "response": "{\"answer\": \"\", \"citations\": [], \"abstain\": true}",
+      "done_reason": "stop",
+      "prompt_eval_count": 163,
+      "eval_count": 17,
+      "total_duration": 650168958,
+      "load_duration": 101032331,
+      "parsed": {
+        "answer": "",
+        "citations": [],
+        "abstain": true
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0
+    },
+    {
+      "source": "longmemeval_s*",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:17",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:17:question0",
+      "question": "Current Date: 2023/05/27 (Sat) 22:54,\n\n Now Answer the Question: How many hours do I work in a typical week during peak campaign seasons?",
+      "answers": [
+        "50"
+      ],
+      "arm": "retrieved_memory",
+      "label_method": "provided_turn_labels",
+      "packed_chunk_ids": [
+        "memory-agent-bench:Accurate_Retrieval:17:session45:turn5:chunk0",
+        "memory-agent-bench:Accurate_Retrieval:17:session45:turn1:chunk1",
+        "memory-agent-bench:Accurate_Retrieval:17:session54:turn6:chunk0",
+        "memory-agent-bench:Accurate_Retrieval:17:session45:turn2:chunk0",
+        "memory-agent-bench:Accurate_Retrieval:17:session54:turn0:chunk0"
+      ],
+      "allowed_citations": [
+        "0443b0a9",
+        "0ae09381",
+        "46840ad4",
+        "6910920b",
+        "aa65bb5f"
+      ],
+      "token_count": 1044,
+      "proxy_evidence_hit": true,
+      "citation_ids_valid": true,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 1441.5931129988167,
+      "response": "{\"answer\": \"45\", \"citations\": [\"46840ad4\"], \"abstain\": false}",
+      "done_reason": "stop",
+      "prompt_eval_count": 1106,
+      "eval_count": 28,
+      "total_duration": 1436373727,
+      "load_duration": 95743419,
+      "parsed": {
+        "answer": "45",
+        "citations": [
+          "46840ad4"
+        ],
+        "abstain": false
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0
+    },
+    {
+      "source": "longmemeval_s*",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:17",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:17:question2",
+      "question": "Current Date: 2023/06/23 (Fri) 07:47,\n\n Now Answer the Question: How many free night's stays can I redeem at any Hilton property with my accumulated points?",
+      "answers": [
+        "Two"
+      ],
+      "arm": "no_memory",
+      "label_method": "provided_turn_labels",
+      "packed_chunk_ids": [],
+      "allowed_citations": [],
+      "token_count": 0,
+      "proxy_evidence_hit": false,
+      "citation_ids_valid": false,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 634.7671019993868,
+      "response": "{\"answer\": \"\", \"citations\": [], \"abstain\": true}",
+      "done_reason": "stop",
+      "prompt_eval_count": 166,
+      "eval_count": 17,
+      "total_duration": 631490637,
+      "load_duration": 93051167,
+      "parsed": {
+        "answer": "",
+        "citations": [],
+        "abstain": true
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0
+    },
+    {
+      "source": "longmemeval_s*",
+      "sample_id": "memory-agent-bench:Accurate_Retrieval:17",
+      "question_id": "memory-agent-bench:Accurate_Retrieval:17:question2",
+      "question": "Current Date: 2023/06/23 (Fri) 07:47,\n\n Now Answer the Question: How many free night's stays can I redeem at any Hilton property with my accumulated points?",
+      "answers": [
+        "Two"
+      ],
+      "arm": "retrieved_memory",
+      "label_method": "provided_turn_labels",
+      "packed_chunk_ids": [
+        "memory-agent-bench:Accurate_Retrieval:17:session39:turn3:chunk0",
+        "memory-agent-bench:Accurate_Retrieval:17:session39:turn4:chunk0",
+        "memory-agent-bench:Accurate_Retrieval:17:session39:turn2:chunk0",
+        "memory-agent-bench:Accurate_Retrieval:17:session39:turn5:chunk0",
+        "memory-agent-bench:Accurate_Retrieval:17:session88:turn5:chunk2"
+      ],
+      "allowed_citations": [
+        "645b8934",
+        "87ff679c",
+        "b40ea1ce",
+        "fa14ab78",
+        "ff2a8b89"
+      ],
+      "token_count": 981,
+      "proxy_evidence_hit": true,
+      "citation_ids_valid": true,
+      "model": "qwen2.5:7b-instruct",
+      "think": null,
+      "request_format": "json",
+      "thinking_returned": false,
+      "latency_ms": 1632.0422530006908,
+      "response": "{\"answer\": \"one\", \"citations\": [\"fa14ab78\", \"b40ea1ce\"], \"abstain\": false}",
+      "done_reason": "stop",
+      "prompt_eval_count": 1058,
+      "eval_count": 34,
+      "total_duration": 1627803266,
+      "load_duration": 95993047,
+      "parsed": {
+        "answer": "one",
+        "citations": [
+          "fa14ab78",
+          "b40ea1ce"
+        ],
+        "abstain": false
+      },
+      "error": null,
+      "exact_match": 0.0,
+      "alias_containment": 0.0,
+      "token_f1": 0.0
+    }
+  ]
+}

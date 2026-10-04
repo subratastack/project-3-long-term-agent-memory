@@ -1,0 +1,289 @@
+{
+  "version": 1,
+  "track": "conflict_resolution",
+  "origin": "Authored trust matrix and temporal scenarios; expected visible claims are explicit labels.",
+  "evaluation_time": "2026-10-01T00:00:00+00:00",
+  "cases": [
+    {
+      "id": "trust-untrusted-untrusted",
+      "first_trust": "untrusted",
+      "second_trust": "untrusted",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": []
+    },
+    {
+      "id": "trust-untrusted-low",
+      "first_trust": "untrusted",
+      "second_trust": "low",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-untrusted-medium",
+      "first_trust": "untrusted",
+      "second_trust": "medium",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-untrusted-high",
+      "first_trust": "untrusted",
+      "second_trust": "high",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-untrusted-system",
+      "first_trust": "untrusted",
+      "second_trust": "system",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-low-untrusted",
+      "first_trust": "low",
+      "second_trust": "untrusted",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-low-low",
+      "first_trust": "low",
+      "second_trust": "low",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": []
+    },
+    {
+      "id": "trust-low-medium",
+      "first_trust": "low",
+      "second_trust": "medium",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-low-high",
+      "first_trust": "low",
+      "second_trust": "high",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-low-system",
+      "first_trust": "low",
+      "second_trust": "system",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-medium-untrusted",
+      "first_trust": "medium",
+      "second_trust": "untrusted",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-medium-low",
+      "first_trust": "medium",
+      "second_trust": "low",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-medium-medium",
+      "first_trust": "medium",
+      "second_trust": "medium",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": []
+    },
+    {
+      "id": "trust-medium-high",
+      "first_trust": "medium",
+      "second_trust": "high",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-medium-system",
+      "first_trust": "medium",
+      "second_trust": "system",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-high-untrusted",
+      "first_trust": "high",
+      "second_trust": "untrusted",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-high-low",
+      "first_trust": "high",
+      "second_trust": "low",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-high-medium",
+      "first_trust": "high",
+      "second_trust": "medium",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-high-high",
+      "first_trust": "high",
+      "second_trust": "high",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": []
+    },
+    {
+      "id": "trust-high-system",
+      "first_trust": "high",
+      "second_trust": "system",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "trust-system-untrusted",
+      "first_trust": "system",
+      "second_trust": "untrusted",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-system-low",
+      "first_trust": "system",
+      "second_trust": "low",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-system-medium",
+      "first_trust": "system",
+      "second_trust": "medium",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-system-high",
+      "first_trust": "system",
+      "second_trust": "high",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "trust-system-system",
+      "first_trust": "system",
+      "second_trust": "system",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": []
+    },
+    {
+      "id": "tie-newer-is-not-authority",
+      "first_trust": "system",
+      "second_trust": "system",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "expected_visible": []
+    },
+    {
+      "id": "historical-before-second",
+      "first_trust": "medium",
+      "second_trust": "system",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "as_of_days_ago": 10,
+      "expected_visible": [
+        "first"
+      ]
+    },
+    {
+      "id": "ended-first-window",
+      "first_trust": "system",
+      "second_trust": "medium",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "first_valid_to_days_ago": 2,
+      "expected_visible": [
+        "second"
+      ]
+    },
+    {
+      "id": "explicit-supersession",
+      "first_trust": "system",
+      "second_trust": "system",
+      "first_age_days": 90,
+      "second_age_days": 1,
+      "relation": "supersession",
+      "expected_visible": [
+        "second"
+      ]
+    }
+  ]
+}

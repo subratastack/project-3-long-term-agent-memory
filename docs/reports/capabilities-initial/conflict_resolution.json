@@ -1,0 +1,1358 @@
+{
+  "track": "conflict_resolution",
+  "created_at": "2026-10-04T00:16:33.172363+00:00",
+  "implementation_sha256": "7824cc1d753017577d5cf77a9d8aacaaab7d4555b7d19bd3949bb7e7f031c286",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39"
+  },
+  "fixture_sha256": "175657e1723216a923d934f60f461831c621667f0775d41a1e37fab76cf4fa1b",
+  "evaluation_time": "2026-10-01 00:00:00+00:00",
+  "database_mode": "rollback-only PostgreSQL, fresh tenant per case",
+  "summary": {
+    "cases": 29,
+    "correct_visible_sets": 29,
+    "visible_set_accuracy": 1
+  },
+  "results": [
+    {
+      "case_id": "trust-untrusted-untrusted",
+      "scenario": {
+        "id": "trust-untrusted-untrusted",
+        "first_trust": "untrusted",
+        "second_trust": "untrusted",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": []
+      },
+      "expected_visible": [],
+      "visible": [],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "03d18604-97a8-468b-a089-356161d8ae91",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "6a48a810-cc9b-418e-a735-3a07644dab28"
+          },
+          {
+            "memory_id": "6a48a810-cc9b-418e-a735-3a07644dab28",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "03d18604-97a8-468b-a089-356161d8ae91"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "2051c9a4-77d4-4717-9714-adb57da5539a",
+            "memory_ids": [
+              "6a48a810-cc9b-418e-a735-3a07644dab28",
+              "03d18604-97a8-468b-a089-356161d8ae91"
+            ],
+            "state": "unresolved",
+            "reason": "equal trust (untrusted); needs review",
+            "winner_id": null,
+            "loser_id": null
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-untrusted-low",
+      "scenario": {
+        "id": "trust-untrusted-low",
+        "first_trust": "untrusted",
+        "second_trust": "low",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "f1028ced-e9f5-4372-825a-b363813a5dbe",
+            "reason": "lost_conflict",
+            "related_memory_id": "cda4568b-dd16-4647-b456-0add8a3fdd0d"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "86e63b14-052f-4716-ac4e-297d851aea5f",
+            "memory_ids": [
+              "cda4568b-dd16-4647-b456-0add8a3fdd0d",
+              "f1028ced-e9f5-4372-825a-b363813a5dbe"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (low over untrusted)",
+            "winner_id": "cda4568b-dd16-4647-b456-0add8a3fdd0d",
+            "loser_id": "f1028ced-e9f5-4372-825a-b363813a5dbe"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-untrusted-medium",
+      "scenario": {
+        "id": "trust-untrusted-medium",
+        "first_trust": "untrusted",
+        "second_trust": "medium",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "ce915f0d-56d7-4113-8b3f-88360ee41795",
+            "reason": "lost_conflict",
+            "related_memory_id": "6d89739f-53bf-4c24-adc3-077e95d58147"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "c542c65c-745d-4b03-abd2-c98504ed7a61",
+            "memory_ids": [
+              "6d89739f-53bf-4c24-adc3-077e95d58147",
+              "ce915f0d-56d7-4113-8b3f-88360ee41795"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (medium over untrusted)",
+            "winner_id": "6d89739f-53bf-4c24-adc3-077e95d58147",
+            "loser_id": "ce915f0d-56d7-4113-8b3f-88360ee41795"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-untrusted-high",
+      "scenario": {
+        "id": "trust-untrusted-high",
+        "first_trust": "untrusted",
+        "second_trust": "high",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "d11665ca-005d-4231-81e6-45cacdca91f8",
+            "reason": "lost_conflict",
+            "related_memory_id": "a46819ea-71b8-4d50-88dc-5c894eb96263"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "c5899279-564b-42b4-8fd3-b557c91d2766",
+            "memory_ids": [
+              "a46819ea-71b8-4d50-88dc-5c894eb96263",
+              "d11665ca-005d-4231-81e6-45cacdca91f8"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (high over untrusted)",
+            "winner_id": "a46819ea-71b8-4d50-88dc-5c894eb96263",
+            "loser_id": "d11665ca-005d-4231-81e6-45cacdca91f8"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-untrusted-system",
+      "scenario": {
+        "id": "trust-untrusted-system",
+        "first_trust": "untrusted",
+        "second_trust": "system",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "c292933d-ac64-4982-a919-fb76b41b0f97",
+            "reason": "lost_conflict",
+            "related_memory_id": "12ed0904-2a44-4135-8ef5-70e0a7005e35"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "b42f7d3d-16ec-48da-ac13-9e45c38531d5",
+            "memory_ids": [
+              "12ed0904-2a44-4135-8ef5-70e0a7005e35",
+              "c292933d-ac64-4982-a919-fb76b41b0f97"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (system over untrusted)",
+            "winner_id": "12ed0904-2a44-4135-8ef5-70e0a7005e35",
+            "loser_id": "c292933d-ac64-4982-a919-fb76b41b0f97"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-low-untrusted",
+      "scenario": {
+        "id": "trust-low-untrusted",
+        "first_trust": "low",
+        "second_trust": "untrusted",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "5af1bb1a-2b03-407b-9803-37ad8524cad1",
+            "reason": "lost_conflict",
+            "related_memory_id": "2bdd98e7-3783-4e7e-8456-7082d9071a62"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "e94b38df-a838-454f-97d6-78115c287ec2",
+            "memory_ids": [
+              "5af1bb1a-2b03-407b-9803-37ad8524cad1",
+              "2bdd98e7-3783-4e7e-8456-7082d9071a62"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (low over untrusted)",
+            "winner_id": "2bdd98e7-3783-4e7e-8456-7082d9071a62",
+            "loser_id": "5af1bb1a-2b03-407b-9803-37ad8524cad1"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-low-low",
+      "scenario": {
+        "id": "trust-low-low",
+        "first_trust": "low",
+        "second_trust": "low",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": []
+      },
+      "expected_visible": [],
+      "visible": [],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "3ce94ac0-ae50-4e21-af3a-554bb6defebc",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "8be873f9-c5e5-407d-b544-23e66c29995d"
+          },
+          {
+            "memory_id": "8be873f9-c5e5-407d-b544-23e66c29995d",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "3ce94ac0-ae50-4e21-af3a-554bb6defebc"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "e46948db-cc89-4b17-b1df-488ef636499c",
+            "memory_ids": [
+              "3ce94ac0-ae50-4e21-af3a-554bb6defebc",
+              "8be873f9-c5e5-407d-b544-23e66c29995d"
+            ],
+            "state": "unresolved",
+            "reason": "equal trust (low); needs review",
+            "winner_id": null,
+            "loser_id": null
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-low-medium",
+      "scenario": {
+        "id": "trust-low-medium",
+        "first_trust": "low",
+        "second_trust": "medium",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "67908fb6-c178-4296-b1b0-b9cd37863698",
+            "reason": "lost_conflict",
+            "related_memory_id": "fd6c029b-8a2b-4077-b6e2-c182c57bbaf0"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "4e26fd79-5a13-4e56-be14-8fbbc512a1a0",
+            "memory_ids": [
+              "fd6c029b-8a2b-4077-b6e2-c182c57bbaf0",
+              "67908fb6-c178-4296-b1b0-b9cd37863698"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (medium over low)",
+            "winner_id": "fd6c029b-8a2b-4077-b6e2-c182c57bbaf0",
+            "loser_id": "67908fb6-c178-4296-b1b0-b9cd37863698"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-low-high",
+      "scenario": {
+        "id": "trust-low-high",
+        "first_trust": "low",
+        "second_trust": "high",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "5cd73005-c5aa-46b0-b05a-68005490b9aa",
+            "reason": "lost_conflict",
+            "related_memory_id": "61879d43-a825-4f64-9680-b944611a8225"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "9d211c36-208e-4dcb-83fb-9ccc543d0ea5",
+            "memory_ids": [
+              "61879d43-a825-4f64-9680-b944611a8225",
+              "5cd73005-c5aa-46b0-b05a-68005490b9aa"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (high over low)",
+            "winner_id": "61879d43-a825-4f64-9680-b944611a8225",
+            "loser_id": "5cd73005-c5aa-46b0-b05a-68005490b9aa"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-low-system",
+      "scenario": {
+        "id": "trust-low-system",
+        "first_trust": "low",
+        "second_trust": "system",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "3b9e502f-fd97-4591-805a-44079870e8c6",
+            "reason": "lost_conflict",
+            "related_memory_id": "a5dc0c98-9e0d-4513-ab98-bce45a0fd977"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "e247ac68-0e20-4f5f-a58f-2d31a8544aec",
+            "memory_ids": [
+              "a5dc0c98-9e0d-4513-ab98-bce45a0fd977",
+              "3b9e502f-fd97-4591-805a-44079870e8c6"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (system over low)",
+            "winner_id": "a5dc0c98-9e0d-4513-ab98-bce45a0fd977",
+            "loser_id": "3b9e502f-fd97-4591-805a-44079870e8c6"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-medium-untrusted",
+      "scenario": {
+        "id": "trust-medium-untrusted",
+        "first_trust": "medium",
+        "second_trust": "untrusted",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "a607c272-0dc2-4a42-a0bb-100ccdc979a5",
+            "reason": "lost_conflict",
+            "related_memory_id": "3265ea39-c489-43d1-b38a-53a62ac53bb0"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "d37abd75-545c-44d4-bfd7-77eaffce313b",
+            "memory_ids": [
+              "a607c272-0dc2-4a42-a0bb-100ccdc979a5",
+              "3265ea39-c489-43d1-b38a-53a62ac53bb0"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (medium over untrusted)",
+            "winner_id": "3265ea39-c489-43d1-b38a-53a62ac53bb0",
+            "loser_id": "a607c272-0dc2-4a42-a0bb-100ccdc979a5"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-medium-low",
+      "scenario": {
+        "id": "trust-medium-low",
+        "first_trust": "medium",
+        "second_trust": "low",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "707c1082-20de-4cf1-a2da-8f7cbf243695",
+            "reason": "lost_conflict",
+            "related_memory_id": "eea55447-005c-4ae9-8fea-c095adbbd1f6"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "d13e00c5-744c-4673-b63e-52f8e679f7e4",
+            "memory_ids": [
+              "707c1082-20de-4cf1-a2da-8f7cbf243695",
+              "eea55447-005c-4ae9-8fea-c095adbbd1f6"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (medium over low)",
+            "winner_id": "eea55447-005c-4ae9-8fea-c095adbbd1f6",
+            "loser_id": "707c1082-20de-4cf1-a2da-8f7cbf243695"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-medium-medium",
+      "scenario": {
+        "id": "trust-medium-medium",
+        "first_trust": "medium",
+        "second_trust": "medium",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": []
+      },
+      "expected_visible": [],
+      "visible": [],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "89da1252-2bad-4ff2-8398-432061cc1f41",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "e196ca0d-df16-429b-aab5-138867792cc9"
+          },
+          {
+            "memory_id": "e196ca0d-df16-429b-aab5-138867792cc9",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "89da1252-2bad-4ff2-8398-432061cc1f41"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "1b113505-ba12-4f09-a162-ff50b95440f3",
+            "memory_ids": [
+              "89da1252-2bad-4ff2-8398-432061cc1f41",
+              "e196ca0d-df16-429b-aab5-138867792cc9"
+            ],
+            "state": "unresolved",
+            "reason": "equal trust (medium); needs review",
+            "winner_id": null,
+            "loser_id": null
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-medium-high",
+      "scenario": {
+        "id": "trust-medium-high",
+        "first_trust": "medium",
+        "second_trust": "high",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "4cd34a56-7885-4b24-b7e6-c9ae937340ac",
+            "reason": "lost_conflict",
+            "related_memory_id": "6cbbd925-4a21-416f-8cce-f3d049e7ec43"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "bb2d00c4-bb47-4f7f-a5b7-1a2e9f8fcfb8",
+            "memory_ids": [
+              "6cbbd925-4a21-416f-8cce-f3d049e7ec43",
+              "4cd34a56-7885-4b24-b7e6-c9ae937340ac"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (high over medium)",
+            "winner_id": "6cbbd925-4a21-416f-8cce-f3d049e7ec43",
+            "loser_id": "4cd34a56-7885-4b24-b7e6-c9ae937340ac"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-medium-system",
+      "scenario": {
+        "id": "trust-medium-system",
+        "first_trust": "medium",
+        "second_trust": "system",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "538ffd29-a4af-4aad-9da5-0ea441402343",
+            "reason": "lost_conflict",
+            "related_memory_id": "fd1fb75f-c7e3-46f9-af47-010b8cb593be"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "0b28c4f6-86de-4fed-9451-aaba8d26cabd",
+            "memory_ids": [
+              "fd1fb75f-c7e3-46f9-af47-010b8cb593be",
+              "538ffd29-a4af-4aad-9da5-0ea441402343"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (system over medium)",
+            "winner_id": "fd1fb75f-c7e3-46f9-af47-010b8cb593be",
+            "loser_id": "538ffd29-a4af-4aad-9da5-0ea441402343"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-high-untrusted",
+      "scenario": {
+        "id": "trust-high-untrusted",
+        "first_trust": "high",
+        "second_trust": "untrusted",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "f2252b9c-942b-444f-bd50-e6b747e935f2",
+            "reason": "lost_conflict",
+            "related_memory_id": "90e748ee-cf8b-48f2-871d-2ae3321e1c71"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "e0a77a1a-d2fa-43e4-91c9-8f0d3a00dec9",
+            "memory_ids": [
+              "f2252b9c-942b-444f-bd50-e6b747e935f2",
+              "90e748ee-cf8b-48f2-871d-2ae3321e1c71"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (high over untrusted)",
+            "winner_id": "90e748ee-cf8b-48f2-871d-2ae3321e1c71",
+            "loser_id": "f2252b9c-942b-444f-bd50-e6b747e935f2"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-high-low",
+      "scenario": {
+        "id": "trust-high-low",
+        "first_trust": "high",
+        "second_trust": "low",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "3dcf5fa4-5e83-4358-9819-820be948299c",
+            "reason": "lost_conflict",
+            "related_memory_id": "c82403df-f250-44e3-91f4-83bbf3cc65bb"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "2a63983e-0274-49e1-a2c7-5ec0bd828436",
+            "memory_ids": [
+              "3dcf5fa4-5e83-4358-9819-820be948299c",
+              "c82403df-f250-44e3-91f4-83bbf3cc65bb"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (high over low)",
+            "winner_id": "c82403df-f250-44e3-91f4-83bbf3cc65bb",
+            "loser_id": "3dcf5fa4-5e83-4358-9819-820be948299c"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-high-medium",
+      "scenario": {
+        "id": "trust-high-medium",
+        "first_trust": "high",
+        "second_trust": "medium",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "da372fc7-d188-41ff-b495-eecddaa9d88c",
+            "reason": "lost_conflict",
+            "related_memory_id": "0bee6867-2eff-4298-bcee-40a117472d31"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "7c4f873d-9747-48c0-86c7-535165136a97",
+            "memory_ids": [
+              "da372fc7-d188-41ff-b495-eecddaa9d88c",
+              "0bee6867-2eff-4298-bcee-40a117472d31"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (high over medium)",
+            "winner_id": "0bee6867-2eff-4298-bcee-40a117472d31",
+            "loser_id": "da372fc7-d188-41ff-b495-eecddaa9d88c"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-high-high",
+      "scenario": {
+        "id": "trust-high-high",
+        "first_trust": "high",
+        "second_trust": "high",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": []
+      },
+      "expected_visible": [],
+      "visible": [],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "5fa61e14-3ff7-4087-a08e-3aa4a6c273aa",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "f7fb8853-494d-4903-808f-d90cc048f9ab"
+          },
+          {
+            "memory_id": "f7fb8853-494d-4903-808f-d90cc048f9ab",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "5fa61e14-3ff7-4087-a08e-3aa4a6c273aa"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "afb6e63b-64f5-44b2-af72-f24895d2be3f",
+            "memory_ids": [
+              "f7fb8853-494d-4903-808f-d90cc048f9ab",
+              "5fa61e14-3ff7-4087-a08e-3aa4a6c273aa"
+            ],
+            "state": "unresolved",
+            "reason": "equal trust (high); needs review",
+            "winner_id": null,
+            "loser_id": null
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-high-system",
+      "scenario": {
+        "id": "trust-high-system",
+        "first_trust": "high",
+        "second_trust": "system",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "6784757d-27d3-409c-924a-519eb3c48be7",
+            "reason": "lost_conflict",
+            "related_memory_id": "6edf8499-d254-4ed5-8120-f30dd7e42d7c"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "c85935a2-c36d-4171-a8ab-905e930b60a3",
+            "memory_ids": [
+              "6edf8499-d254-4ed5-8120-f30dd7e42d7c",
+              "6784757d-27d3-409c-924a-519eb3c48be7"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (system over high)",
+            "winner_id": "6edf8499-d254-4ed5-8120-f30dd7e42d7c",
+            "loser_id": "6784757d-27d3-409c-924a-519eb3c48be7"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-system-untrusted",
+      "scenario": {
+        "id": "trust-system-untrusted",
+        "first_trust": "system",
+        "second_trust": "untrusted",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "a5d0ce86-cf1e-4a73-8034-7d95de0f59da",
+            "reason": "lost_conflict",
+            "related_memory_id": "d49e5f8c-31b4-44f3-93fc-1f66d9ee019d"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "40083164-efa4-4434-8374-2d95ffaecc0f",
+            "memory_ids": [
+              "a5d0ce86-cf1e-4a73-8034-7d95de0f59da",
+              "d49e5f8c-31b4-44f3-93fc-1f66d9ee019d"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (system over untrusted)",
+            "winner_id": "d49e5f8c-31b4-44f3-93fc-1f66d9ee019d",
+            "loser_id": "a5d0ce86-cf1e-4a73-8034-7d95de0f59da"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-system-low",
+      "scenario": {
+        "id": "trust-system-low",
+        "first_trust": "system",
+        "second_trust": "low",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "f02523d7-2a43-4629-af2f-b9d3faf8a436",
+            "reason": "lost_conflict",
+            "related_memory_id": "7e591489-1410-400b-b12c-cb4763ed0785"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "84aa2a18-c175-49a4-90a0-c4b3843d88b2",
+            "memory_ids": [
+              "f02523d7-2a43-4629-af2f-b9d3faf8a436",
+              "7e591489-1410-400b-b12c-cb4763ed0785"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (system over low)",
+            "winner_id": "7e591489-1410-400b-b12c-cb4763ed0785",
+            "loser_id": "f02523d7-2a43-4629-af2f-b9d3faf8a436"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-system-medium",
+      "scenario": {
+        "id": "trust-system-medium",
+        "first_trust": "system",
+        "second_trust": "medium",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "6ce3c591-d153-47e8-8d71-5e8ea4a66679",
+            "reason": "lost_conflict",
+            "related_memory_id": "ad1ff8bb-50df-4250-ba29-9fb828735628"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "154c3690-60ec-498b-a893-1e45b74913a6",
+            "memory_ids": [
+              "6ce3c591-d153-47e8-8d71-5e8ea4a66679",
+              "ad1ff8bb-50df-4250-ba29-9fb828735628"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (system over medium)",
+            "winner_id": "ad1ff8bb-50df-4250-ba29-9fb828735628",
+            "loser_id": "6ce3c591-d153-47e8-8d71-5e8ea4a66679"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-system-high",
+      "scenario": {
+        "id": "trust-system-high",
+        "first_trust": "system",
+        "second_trust": "high",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first",
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "f88ef907-373a-4243-b9cd-2dcf771a6dd6",
+            "reason": "lost_conflict",
+            "related_memory_id": "7cc47a2c-22b4-4341-91b6-05a83048cd56"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "8b88b01a-dff2-4512-908a-c5947427e28c",
+            "memory_ids": [
+              "f88ef907-373a-4243-b9cd-2dcf771a6dd6",
+              "7cc47a2c-22b4-4341-91b6-05a83048cd56"
+            ],
+            "state": "resolved_by_trust",
+            "reason": "higher trust wins (system over high)",
+            "winner_id": "7cc47a2c-22b4-4341-91b6-05a83048cd56",
+            "loser_id": "f88ef907-373a-4243-b9cd-2dcf771a6dd6"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "trust-system-system",
+      "scenario": {
+        "id": "trust-system-system",
+        "first_trust": "system",
+        "second_trust": "system",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": []
+      },
+      "expected_visible": [],
+      "visible": [],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "1e1281eb-23b4-42c4-992c-6d495fb44ceb",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "8e137ab7-5879-4251-a095-19f1abc91fff"
+          },
+          {
+            "memory_id": "8e137ab7-5879-4251-a095-19f1abc91fff",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "1e1281eb-23b4-42c4-992c-6d495fb44ceb"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "6ae1a922-8a61-4c3d-93cd-bcadcc2a0658",
+            "memory_ids": [
+              "1e1281eb-23b4-42c4-992c-6d495fb44ceb",
+              "8e137ab7-5879-4251-a095-19f1abc91fff"
+            ],
+            "state": "unresolved",
+            "reason": "equal trust (system); needs review",
+            "winner_id": null,
+            "loser_id": null
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "tie-newer-is-not-authority",
+      "scenario": {
+        "id": "tie-newer-is-not-authority",
+        "first_trust": "system",
+        "second_trust": "system",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "expected_visible": []
+      },
+      "expected_visible": [],
+      "visible": [],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "6d893631-d2f5-4b53-a16a-b41b80e259b3",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "a716e235-b063-405c-babd-20f1098c45ca"
+          },
+          {
+            "memory_id": "a716e235-b063-405c-babd-20f1098c45ca",
+            "reason": "unresolved_conflict",
+            "related_memory_id": "6d893631-d2f5-4b53-a16a-b41b80e259b3"
+          }
+        ],
+        "conflicts": [
+          {
+            "relation_id": "f655e2e8-79ac-4dc9-8cee-b0c323d0c834",
+            "memory_ids": [
+              "6d893631-d2f5-4b53-a16a-b41b80e259b3",
+              "a716e235-b063-405c-babd-20f1098c45ca"
+            ],
+            "state": "unresolved",
+            "reason": "equal trust (system); needs review",
+            "winner_id": null,
+            "loser_id": null
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "historical-before-second",
+      "scenario": {
+        "id": "historical-before-second",
+        "first_trust": "medium",
+        "second_trust": "system",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "as_of_days_ago": 10,
+        "expected_visible": [
+          "first"
+        ]
+      },
+      "expected_visible": [
+        "first"
+      ],
+      "visible": [
+        "first"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-09-21 00:00:00+00:00",
+        "candidates_in": 1,
+        "excluded": [],
+        "conflicts": []
+      }
+    },
+    {
+      "case_id": "ended-first-window",
+      "scenario": {
+        "id": "ended-first-window",
+        "first_trust": "system",
+        "second_trust": "medium",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "first_valid_to_days_ago": 2,
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 1,
+        "excluded": [],
+        "conflicts": []
+      }
+    },
+    {
+      "case_id": "explicit-supersession",
+      "scenario": {
+        "id": "explicit-supersession",
+        "first_trust": "system",
+        "second_trust": "system",
+        "first_age_days": 90,
+        "second_age_days": 1,
+        "relation": "supersession",
+        "expected_visible": [
+          "second"
+        ]
+      },
+      "expected_visible": [
+        "second"
+      ],
+      "visible": [
+        "second"
+      ],
+      "success": true,
+      "retrieved_before_resolution": [
+        "second",
+        "first"
+      ],
+      "temporal": {
+        "effective_at": "2026-10-01 00:00:00+00:00",
+        "candidates_in": 2,
+        "excluded": [
+          {
+            "memory_id": "8e2979ca-e84c-4df4-b438-d6b35da5299f",
+            "reason": "superseded",
+            "related_memory_id": "255757dd-008a-44df-b341-1b80024380f1"
+          }
+        ],
+        "conflicts": []
+      }
+    }
+  ]
+}

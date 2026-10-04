@@ -1,0 +1,9 @@
+{
+  "dataset_id": "ai-hyz/MemoryAgentBench",
+  "revision": "7ea066982b140a19337e17e60d45d4076e042faf",
+  "split": "Accurate_Retrieval",
+  "filename": "data/Accurate_Retrieval-00000-of-00001.parquet",
+  "sha256": "56c3cd80fb6731a3e53cd1a6be3148f54df60ff2d290ee50e28f8acebf9655c1",
+  "chunk_words": 128,
+  "overlap_words": 32
+}

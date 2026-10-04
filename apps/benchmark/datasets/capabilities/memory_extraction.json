@@ -1,0 +1,200 @@
+{
+  "version": 1,
+  "track": "memory_extraction",
+  "origin": "Authored event-to-fact diagnostic cases. Word-group matching is an auditable proxy, not semantic judging. Type labels follow the production classifier, including configuration-first priority.",
+  "cases": [
+    {
+      "id": "configuration",
+      "events": [
+        {
+          "source": "configuration",
+          "content": "checkout-api timeout=2s"
+        }
+      ],
+      "facts": [
+        {
+          "id": "timeout",
+          "groups": [
+            [
+              "checkout",
+              "checkout-api"
+            ],
+            [
+              "timeout"
+            ],
+            [
+              "2",
+              "two"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "semantic"
+        }
+      ]
+    },
+    {
+      "id": "incident",
+      "events": [
+        {
+          "source": "system_event",
+          "content": "Incident INC-3101: checkout-api requests timed out for 8 minutes during peak traffic."
+        }
+      ],
+      "facts": [
+        {
+          "id": "incident",
+          "groups": [
+            [
+              "checkout",
+              "checkout-api"
+            ],
+            [
+              "8",
+              "eight"
+            ],
+            [
+              "timeout",
+              "timed out"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "episodic"
+        }
+      ]
+    },
+    {
+      "id": "preference",
+      "events": [
+        {
+          "source": "user_message",
+          "content": "Please remember that I prefer UTC timestamps in incident reports."
+        }
+      ],
+      "facts": [
+        {
+          "id": "utc",
+          "groups": [
+            [
+              "utc"
+            ],
+            [
+              "prefer",
+              "preference"
+            ],
+            [
+              "timestamp",
+              "time"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "episodic"
+        }
+      ]
+    },
+    {
+      "id": "two-config-facts",
+      "events": [
+        {
+          "source": "configuration",
+          "content": "checkout-api timeout=5s; db-primary pool_size=50"
+        }
+      ],
+      "facts": [
+        {
+          "id": "timeout",
+          "groups": [
+            [
+              "checkout",
+              "checkout-api"
+            ],
+            [
+              "timeout"
+            ],
+            [
+              "5",
+              "five"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "semantic"
+        },
+        {
+          "id": "pool",
+          "groups": [
+            [
+              "db-primary",
+              "database"
+            ],
+            [
+              "pool"
+            ],
+            [
+              "50",
+              "fifty"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "semantic"
+        }
+      ]
+    },
+    {
+      "id": "runbook",
+      "events": [
+        {
+          "source": "configuration",
+          "content": "Approved checkout-api procedure: first inspect payments-gateway pool saturation, then increase the pool size only if saturation is confirmed.",
+          "metadata": {
+            "approved_by": "platform-admin"
+          }
+        }
+      ],
+      "facts": [
+        {
+          "id": "pool-check",
+          "groups": [
+            [
+              "checkout",
+              "checkout-api"
+            ],
+            [
+              "payments",
+              "gateway"
+            ],
+            [
+              "pool"
+            ],
+            [
+              "saturation",
+              "saturated"
+            ]
+          ],
+          "sources": [
+            0
+          ],
+          "type": "semantic"
+        }
+      ]
+    },
+    {
+      "id": "noise",
+      "events": [
+        {
+          "source": "user_message",
+          "content": "Hello! Thanks."
+        }
+      ],
+      "facts": []
+    }
+  ]
+}

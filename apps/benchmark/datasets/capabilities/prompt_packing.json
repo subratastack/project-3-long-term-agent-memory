@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "track": "prompt_packing",
+  "origin": "Independent snapshot of the existing authored 24-memory, four-query context-packing corpus.",
+  "budgets": [
+    150,
+    300,
+    500
+  ],
+  "candidate_limit": 30,
+  "memories": {
+    "TIMEOUT_CFG": {
+      "content": "The request timeout for checkout-api is configured to 2 seconds.",
+      "memory_type": "semantic",
+      "subject_keys": [
+        "checkout-api",
+        "timeout"
+      ],
+      "group": null
+    },
+    "TIMEOUT_RUNBOOK": {
+      "content": "Remediation for checkout-api timeouts: scale out the payments-gateway pool first, and raise the timeout to 5 seconds only if p99 latency stays above 1.5 seconds.",
+      "memory_type": "procedural",
+      "subject_keys": [
+        "checkout-api",
+        "timeout",
+        "remediation"
+      ],
+      "group": null
+    },
+    "TIMEOUT_INC_1": {
+      "content": "Incident INC-3101: checkout-api requests timed out after 2 seconds during peak traffic.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "checkout-api",
+        "timeout"
+      ],
+      "group": "TIMEOUT_INC"
+    },
+    "TIMEOUT_INC_2": {
+      "content": "Incident INC-3102: checkout-api requests timed out after 2 seconds during peak traffic.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "checkout-api",
+        "timeout"
+      ],
+      "group": "TIMEOUT_INC"
+    },
+    "TIMEOUT_INC_3": {
+      "content": "Incident INC-3115: checkout-api calls hit the 2 second timeout while the flash sale was running.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "checkout-api",
+        "timeout"
+      ],
+      "group": "TIMEOUT_INC"
+    },
+    "TIMEOUT_INC_4": {
+      "content": "Incident INC-3122: checkout-api timed out for 8 minutes when the payments gateway slowed down.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "checkout-api",
+        "timeout"
+      ],
+      "group": "TIMEOUT_INC"
+    },
+    "TIMEOUT_INC_5": {
+      "content": "Incident INC-3130: timeouts on checkout-api again, users saw failed payments during the evening peak.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "checkout-api",
+        "timeout"
+      ],
+      "group": "TIMEOUT_INC"
+    },
+    "TIMEOUT_INC_6": {
+      "content": "Incident INC-3131: timeouts on checkout-api again, users saw failed payments during the evening peak.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "checkout-api",
+        "timeout"
+      ],
+      "group": "TIMEOUT_INC"
+    },
+    "POOL_CFG": {
+      "content": "The db-primary connection pool size is 50 connections.",
+      "memory_type": "semantic",
+      "subject_keys": [
+        "db-primary",
+        "connection-pool"
+      ],
+      "group": null
+    },
+    "POOL_RUNBOOK": {
+      "content": "Remediation for db-primary pool exhaustion: terminate idle-in-transaction sessions older than 5 minutes, then restart pgbouncer.",
+      "memory_type": "procedural",
+      "subject_keys": [
+        "db-primary",
+        "connection-pool",
+        "remediation"
+      ],
+      "group": null
+    },
+    "POOL_INC_1": {
+      "content": "Incident INC-2201: db-primary connection pool exhausted, API requests queued for 4 minutes.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "db-primary",
+        "connection-pool"
+      ],
+      "group": "POOL_INC"
+    },
+    "POOL_INC_2": {
+      "content": "Incident INC-2202: db-primary connection pool exhausted, API requests queued for 4 minutes.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "db-primary",
+        "connection-pool"
+      ],
+      "group": "POOL_INC"
+    },
+    "POOL_INC_3": {
+      "content": "Incident INC-2240: the connection pool on db-primary ran out during the nightly batch job.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "db-primary",
+        "connection-pool"
+      ],
+      "group": "POOL_INC"
+    },
+    "POOL_INC_4": {
+      "content": "Incident INC-2251: db-primary refused new connections after the pool filled up during a traffic spike.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "db-primary",
+        "connection-pool"
+      ],
+      "group": "POOL_INC"
+    },
+    "CERT_CFG": {
+      "content": "TLS certificates are renewed automatically by cert-manager 30 days before they expire.",
+      "memory_type": "semantic",
+      "subject_keys": [
+        "tls-certificate",
+        "payments-gateway"
+      ],
+      "group": null
+    },
+    "CERT_RUNBOOK": {
+      "content": "Remediation for an expired certificate: run cert-manager renew for the affected secret, then restart the ingress controller.",
+      "memory_type": "procedural",
+      "subject_keys": [
+        "tls-certificate",
+        "payments-gateway",
+        "remediation"
+      ],
+      "group": null
+    },
+    "CERT_INC_1": {
+      "content": "Incident INC-48213: an expired TLS certificate on the payments gateway caused HTTP 503 errors for 12 minutes.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "tls-certificate",
+        "payments-gateway"
+      ],
+      "group": "CERT_INC"
+    },
+    "CERT_INC_2": {
+      "content": "Incident INC-48214: an expired TLS certificate on the payments gateway caused HTTP 503 errors for 12 minutes.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "tls-certificate",
+        "payments-gateway"
+      ],
+      "group": "CERT_INC"
+    },
+    "CERT_INC_3": {
+      "content": "Incident INC-48390: the payments gateway served an expired TLS certificate and checkout returned 503s.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "tls-certificate",
+        "payments-gateway"
+      ],
+      "group": "CERT_INC"
+    },
+    "LATENCY_SLO": {
+      "content": "The p99 latency SLO for checkout-api is 800 milliseconds.",
+      "memory_type": "semantic",
+      "subject_keys": [
+        "checkout-api",
+        "latency"
+      ],
+      "group": null
+    },
+    "DEPLOY_FREEZE": {
+      "content": "Deployments are frozen every Friday after 3pm.",
+      "memory_type": "semantic",
+      "subject_keys": [
+        "deployments"
+      ],
+      "group": null
+    },
+    "RATE_LIMIT": {
+      "content": "The partner API enforces a rate limit of 100 requests per minute.",
+      "memory_type": "semantic",
+      "subject_keys": [
+        "partner-api",
+        "rate-limit"
+      ],
+      "group": null
+    },
+    "ONCALL": {
+      "content": "Priya is the on-call engineer for the payments team this week.",
+      "memory_type": "semantic",
+      "subject_keys": [
+        "on-call",
+        "payments"
+      ],
+      "group": null
+    },
+    "CACHE": {
+      "content": "Redis cache hit rate dropped to 40% after the key schema change.",
+      "memory_type": "episodic",
+      "subject_keys": [
+        "redis",
+        "cache"
+      ],
+      "group": null
+    }
+  },
+  "queries": [
+    {
+      "text": "checkout-api requests are timing out, what should I do",
+      "useful_groups": [
+        "TIMEOUT_CFG",
+        "TIMEOUT_INC",
+        "TIMEOUT_RUNBOOK"
+      ]
+    },
+    {
+      "text": "the db-primary connection pool is exhausted again",
+      "useful_groups": [
+        "POOL_CFG",
+        "POOL_INC",
+        "POOL_RUNBOOK"
+      ]
+    },
+    {
+      "text": "payments gateway returns 503 because of an expired certificate",
+      "useful_groups": [
+        "CERT_CFG",
+        "CERT_INC",
+        "CERT_RUNBOOK"
+      ]
+    },
+    {
+      "text": "how many requests per minute can we send to the partner API",
+      "useful_groups": [
+        "RATE_LIMIT"
+      ]
+    }
+  ]
+}

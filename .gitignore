@@ -6,3 +6,6 @@
 
 # Python environment folder
 .venv/
+
+# Downloaded and normalized external benchmark corpora; reports are committed.
+/data/benchmarks/
