@@ -1,0 +1,13 @@
+{
+  "ks": [10],
+  "strategies": ["semantic"],
+  "sources": ["ruler_qa1_*", "ruler_qa2_*", "longmemeval_s*"],
+  "max_samples_per_source": 1,
+  "max_queries_per_sample": 20,
+  "candidate_limit": 10,
+  "repeats": 5,
+  "seed": 42,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "device": "cpu",
+  "torch_threads": 4
+}

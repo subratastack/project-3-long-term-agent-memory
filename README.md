@@ -202,6 +202,14 @@ PostgreSQL database in rollback-only transactions, and installed local Ollama
 models. Start with the [measured reports](docs/reports/capabilities-initial/README.md)
 and use a fresh output directory for each comparison.
 
+The optional [Phase 6B vector comparison](docs/vector-backend-comparison.md)
+tests pgvector exact search, pgvector HNSW and a compressed TurboVec index on
+the same prepared MemoryAgentBench chunks and queries. It includes committed
+write failures, stale tombstones, tenant isolation and actual reconciliation.
+See the [measured comparison](docs/reports/vector-backend-comparison.md) for
+quality, latency, throughput, storage and recovery costs. The normal service
+continues to use PostgreSQL retrieval.
+
 ## Quick start
 
 ### 1. Start the database and development API
@@ -306,6 +314,7 @@ and rejection examples.
 | Storage and governance | Tenant-scoped records, provenance, trust, audited expiry/tombstones, decay, compaction, maintenance CLI | Deployment scheduling, retention-specific purge |
 | Ingestion | Ollama extraction, deterministic classification, normalization, verification, write policy with poisoning, model-claim, procedure-evidence, and stale-fact checks; supersession of recognized fact claims | Contradiction links, broader fact matching, quarantine review tooling |
 | Retrieval | Full-text and exact vector search, rank fusion, bounded optional reranking | Approximate indexes when justified by evaluation |
+| Optional Phase 6B | Measured pgvector exact/HNSW and TurboVec adapters; transactional external-index outbox, sync worker, authoritative revalidation and reconciliation | Larger-scale evidence, multi-process serving and deployment scheduling before adopting a second index |
 | Temporal behavior | Historical queries, recorded supersession, trust-based conflict resolution | Future-dated replacement edge cases; optional return of unresolved claims in hits |
 | Context packing | Duplicate removal, overlap-aware selection, budget accounting, skip reports | Calibrated relevance floor and improved subject-key quality |
 | Consolidation | Deterministic episode clustering, bounded candidates, evidence thresholds, policy-governed persistence | Scheduled worker, summary refresh/supersession, global deduplication |
@@ -360,6 +369,7 @@ poisoned, stale, and cross-tenant input. See [the test suite](apps/tests) and
 | [Longitudinal benchmark](docs/longitudinal-benchmark.md) | Multi-session recall, changed facts, poison, tenant scope, budgets, and explicit forgetting |
 | [MemoryAgentBench retrieval benchmark](docs/memory-agent-bench.md) | Independent Hugging Face dataset, retrieval diagnostics, and reproducible learning reports |
 | [Memory capability benchmarks](docs/capability-benchmarks.md) | Seven independent tracks with local Ollama, production policy/lifecycle checks, and Markdown learning reports |
+| [Vector backend comparison](docs/vector-backend-comparison.md) | Optional Phase 6B: pgvector exact/HNSW versus TurboVec, authoritative reads, durable sync, failure recovery and measured operational costs |
 | [Consolidation clustering](docs/consolidation-clustering.md) | Group related episodes by tenant, subject, category, and time |
 | [Consolidation summaries](docs/consolidation-summaries.md) | Bounded candidates with complete supporting evidence |
 | [Consolidation promotion](docs/consolidation-promotion.md) | Decide whether repetition supports an observation or procedure |

@@ -9,3 +9,6 @@
 
 # Downloaded and normalized external benchmark corpora; reports are committed.
 /data/benchmarks/
+
+# Optional persistent local vector checkpoints.
+/data/vector-index/

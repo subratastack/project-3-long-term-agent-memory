@@ -13,6 +13,7 @@ from alembic import context
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 
+from apps.memory_service.indexing.index_status import VectorIndexState  # noqa: F401
 from apps.memory_service.persistence.models import Base
 
 load_dotenv()
