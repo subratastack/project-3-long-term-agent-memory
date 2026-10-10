@@ -185,6 +185,7 @@ uv run python -m apps.benchmark.run_poisoning_eval   # add --database for Postgr
 uv run python -m apps.benchmark.run_langgraph_store_eval
 uv run python -m apps.benchmark.run_longitudinal_eval
 uv run python -m apps.benchmark.run_capability_eval
+uv run --extra benchmark python -m apps.benchmark.run_advanced_memory_eval
 ```
 
 The first two require PostgreSQL and the relevant local models; the
@@ -193,6 +194,17 @@ and longitudinal replay use PostgreSQL inside rollback-only transactions and
 deterministic hash embeddings, with no model download. Their measured reports
 and limits are documented in the [Store comparison](docs/langgraph-store-comparison.md)
 and [longitudinal benchmark](docs/longitudinal-benchmark.md).
+
+The [advanced memory evaluator](docs/advanced-memory-evaluation.md) uses one
+canonical case contract for three small benchmark-style adapters and compares
+exact semantic, hybrid, hybrid with reranking, and memory-disabled strategies.
+Its 40 original cases measure retrieval, temporal/update/forgetting correctness,
+poison admission, tenant leakage, abstention, latency, context tokens, and
+isolated PostgreSQL storage in one [readable report](docs/reports/advanced-memory-eval.md)
+and [JSON trace](docs/reports/advanced-memory-eval.json). The default models are
+deterministic and require no weight download. The recorded run exposes one
+accepted poison candidate and four failed abstention cases; see the guide for
+denominators, limits, and reproduction steps.
 
 The [seven capability benchmarks](docs/capability-benchmarks.md) produce
 separate Markdown learning reports and JSON traces for answer quality,
@@ -319,7 +331,7 @@ and rejection examples.
 | Context packing | Duplicate removal, overlap-aware selection, budget accounting, skip reports | Calibrated relevance floor and improved subject-key quality |
 | Consolidation | Deterministic episode clustering, bounded candidates, evidence thresholds, policy-governed persistence | Scheduled worker, summary refresh/supersession, global deduplication |
 | Agent integration | Development HTTP API, Python pipeline entry points, LangGraph read-before-reason and governed outcome learning, usefulness feedback | Working-memory lifecycle, replay deduplication |
-| Evaluation | Retrieval/context-packing comparisons; poisoning corpus; isolated LangGraph Store comparison; seven-session longitudinal replay with a no-memory control; unit, integration and adversarial tests | Larger datasets, real-model longitudinal task trials |
+| Evaluation | Retrieval/context-packing comparisons; poisoning corpus; isolated LangGraph Store comparison; seven-session longitudinal replay; shared advanced evaluator with source adapters, four strategies, correctness/safety/resource metrics, and paired reports; unit, integration and adversarial tests | Larger independent datasets, real-model task trials, accepted-poison and unsupported-query failures exposed by the advanced report |
 
 Further limitations: provenance verification checks references and metadata,
 not whether an extracted sentence is logically supported (only numbers are
@@ -367,6 +379,7 @@ poisoned, stale, and cross-tenant input. See [the test suite](apps/tests) and
 | [LangGraph integration](docs/langgraph-integration.md) | Read packed memory before reasoning, learn from completed tool outcomes, and record usefulness |
 | [LangGraph Store comparison](docs/langgraph-store-comparison.md) | Measured primitive capabilities and the boundary with the authoritative PostgreSQL model |
 | [Longitudinal benchmark](docs/longitudinal-benchmark.md) | Multi-session recall, changed facts, poison, tenant scope, budgets, and explicit forgetting |
+| [Advanced memory evaluation](docs/advanced-memory-evaluation.md) | One reusable case contract and evaluator separating retrieval, correctness, safety, latency, token usage, and storage across strategies |
 | [MemoryAgentBench retrieval benchmark](docs/memory-agent-bench.md) | Independent Hugging Face dataset, retrieval diagnostics, and reproducible learning reports |
 | [Memory capability benchmarks](docs/capability-benchmarks.md) | Seven independent tracks with local Ollama, production policy/lifecycle checks, and Markdown learning reports |
 | [Vector backend comparison](docs/vector-backend-comparison.md) | Optional Phase 6B: pgvector exact/HNSW versus TurboVec, authoritative reads, durable sync, failure recovery and measured operational costs |

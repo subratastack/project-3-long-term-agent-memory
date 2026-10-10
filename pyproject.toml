@@ -28,7 +28,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-benchmark = ["datasets>=4,<5", "huggingface-hub>=0.34,<2"]
+benchmark = [
+  "datasets>=4,<5",
+  "huggingface-hub>=0.34,<2",
+  "ir-measures>=0.4,<0.5",
+  "ranx>=0.3.20,<0.4",
+]
 vector-benchmark = ["turbovec==1.0.0", "psutil>=7,<8"]
 
 [dependency-groups]
@@ -42,7 +47,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["apps", "integrations"]
+packages = ["apps", "integrations", "benchmarks"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
