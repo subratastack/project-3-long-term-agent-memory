@@ -182,7 +182,7 @@ briefing for task success.
 | --- | --- |
 | Temporal accuracy | Correct labeled content is presented and valid at `query_time`; required IDs appear and no forbidden or out-of-window hit is retrieved. Five temporal/update cases. |
 | Update accuracy | The temporal rule restricted to the three update cases; the replacement must be present and older versions absent. |
-| Forgetting accuracy | Forbidden tombstoned/expired facts stay absent from retrieval before packing. Five forgetting cases. Required retained facts are checked separately by task accuracy. |
+| Forgetting accuracy | Forbidden facts stay absent from retrieval before packing; every returned record must cover the query time and be neither tombstoned nor quarantined. An ended validity window fails even if a lifecycle job has not yet marked the record expired. Five forgetting cases. Required retained facts are checked separately by task accuracy. |
 | Poison acceptance | Poisoned candidates admitted as active at any observed point, divided by the five attempted poison writes. Quarantine does not count as active acceptance. |
 | Tenant leakage | Foreign retrieved records divided by all retrieved records. With no retrieved records, the exposure rate is zero; JSON also records counts and leaking queries divided by measured reads. Ownership is checked against both returned metadata and source labels. |
 | Task accuracy | All required facts reach context, content and validity checks pass, absences and safety hold, execution succeeds, and context fits the budget. All 40 cases. |
@@ -198,7 +198,70 @@ source write and each table's size. All memory-enabled strategies share that
 footprint. No-memory reports zero retained-memory storage. Checkpoints show
 this small corpus's growth, not a production capacity limit.
 
-## Measured result on October 4, 2026
+## Try the scorer before running a database benchmark
+
+You can learn the contract with a single fixture and no PostgreSQL connection.
+From the repository root, first run `uv sync --extra benchmark`, then execute
+the following command. It loads `temporal-1`, whose question expects the new
+two-second timeout, and constructs an **illustrative** successful observation.
+The observation is invented to exercise the scorer; it is not evidence that a
+retrieval strategy works. Its latency values are zero placeholders.
+
+```bash
+uv run --extra benchmark python - <<'PY'
+from benchmarks import load_cases
+from apps.memory_service.advanced.evaluation.benchmark_adapter import (
+    BenchmarkObservation, LatencySample, RetrievedMemory,
+)
+from apps.memory_service.advanced.evaluation.ir_metrics import evaluate_ir
+from apps.memory_service.advanced.evaluation.report import score_case
+
+case = next(c for c in load_cases() if c.case_id == "temporal-1")
+event = next(e for e in case.writes if e.memory_id == "new")
+hit = RetrievedMemory(
+    memory_id=event.memory_id, tenant_id=event.tenant_id,
+    content=event.content, score=1.0,
+    valid_from=event.observed_at, valid_to=event.valid_to,
+)
+observation = BenchmarkObservation(
+    case_id=case.case_id, strategy="teaching-example",
+    retrieved=(hit,), presented_memory_ids=(hit.memory_id,),
+    context=hit.content, context_tokens=len(hit.content.split()),
+    latency=LatencySample(
+        retrieval_ms=0, reranking_ms=0, packing_ms=0, total_ms=0,
+    ),
+)
+quality = evaluate_ir((case,), (observation,), k=5)
+print({name: quality[name] for name in ("recall_at_k", "mrr", "ndcg_at_k")})
+print("Temporal correct:", score_case(case, observation, token_budget=160)["temporal_correct"])
+
+# Keep the relevant ID but end its validity exactly at the requested time.
+stale = hit.model_copy(update={"valid_to": case.query_time})
+bad = observation.model_copy(update={"retrieved": (stale,)})
+print("Recall with stale content:", evaluate_ir((case,), (bad,), k=5)["recall_at_k"])
+print("Temporal correct:", score_case(case, bad, token_budget=160)["temporal_correct"])
+PY
+```
+
+The first result gives Recall@5, MRR, and nDCG@5 of `1.0`, with temporal
+correctness `True`. The second keeps recall at `1.0` because the relevant ID
+is still present, but temporal correctness becomes `False`. The validity
+window ends exactly at the question's time, so it no longer covers that time.
+This is why relevance labels and time checks are separate. The snippet uses
+a word count for illustration; the real runner counts the final rendered
+context with the production packer's token estimate.
+
+To add a real case, copy a source envelope of the appropriate style in
+`benchmarks/fixtures/memory_cases.jsonl` and give it a unique case ID. Keep
+each version's source memory ID distinct, order its sessions by arrival, and
+write the expected IDs and exact fact content independently of retrieval.
+For a replacement, label the new ID relevant and the old ID absent. For an
+unsupported question, leave relevant IDs empty and use scenario `abstention`.
+Then load the corpus to validate it and run the same evaluator; a new fixture
+needs no new metric implementation. Unknown strategies passed to the built-in
+runner raise an error, so a spelling mistake cannot silently run hybrid search.
+
+## Measured result on October 10, 2026
 
 The checked-in [Markdown comparison](reports/advanced-memory-eval.md) and
 [JSON traces](reports/advanced-memory-eval.json) were produced with PostgreSQL,
@@ -236,7 +299,7 @@ Two failures explain why retrieval scores need the other columns:
 The measured corpus occupied 475,136 table bytes and 409,600 index bytes,
 884,736 bytes total, shared by the three enabled strategies. Their mean final
 context was 69.575 estimated tokens. Total-query P50/P95 was approximately
-5.20/16.86 ms for exact semantic, 11.45/36.04 ms for hybrid, and 11.37/35.35 ms
+5.50/17.84 ms for exact semantic, 12.26/36.77 ms for hybrid, and 12.27/39.26 ms
 for hybrid with the deterministic reranker. These are local warmed-query
 measurements. The no-memory control's sub-microsecond median reflects a
 Python empty-result path, not a database query or model inference.
@@ -267,7 +330,9 @@ comparison settings; all strategies still receive the same settings.
 
 Add `--fail-on-safety` to write the reports and then exit 1 if any strategy
 has poison acceptance/exposure, a tenant leak, forbidden retrieval, an invalid
-lifecycle record, a budget breach, or an execution error. It exits 1 for the
+lifecycle record, a record outside its query-time validity window, a budget
+breach, or an execution error. A violation on any measured repeat fails this
+gate even if the first read passed. It exits 1 for the
 checked-in fixture's currently accepted poison. This flag is a safety gate;
 it does not apply a retrieval-quality threshold or require the intentionally
 empty control to recall useful facts.
@@ -306,7 +371,9 @@ The evaluator tests cover perfect and empty runs, rank cutoffs, stale facts
 beside correct ones, content mismatches, half-open time boundaries, forgotten
 historical records, tenant metadata forgery, poison admission without
 retrieval, error-aware abstention, resource recording on failures, repeated
-read safety, equivalent source adapters, and JSON/Markdown output. Integration
+read safety (including out-of-window records on later repeats), expiry before
+lifecycle status refresh, rejection of unknown strategies, equivalent source
+adapters, and JSON/Markdown output. Integration
 tests replay all 40 cases through production APIs, verify storage isolation,
 and prove the private schema disappears on normal completion and exceptions.
 The integration suite uses the existing disposable test database and skips

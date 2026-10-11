@@ -184,6 +184,7 @@ def build_report(
                 and not row["safety"]["unknown_returned"]
                 and not row["budget_breach"]
                 and not row["absence_violations"]
+                and not row["invalid_time_ids"]
                 and not row["invalid_status_ids"]
                 and observation.error is None
                 for row, observation in zip(rows, observations, strict=True)

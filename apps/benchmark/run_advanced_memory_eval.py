@@ -203,6 +203,8 @@ def read_case(
     reranker: Reranker,
 ) -> BenchmarkObservation:
     """Use production reads; retain measurements and partial hits on execution errors."""
+    if strategy not in STRATEGIES:
+        raise ValueError(f"unknown retrieval strategy: {strategy}")
     case = prepared.case
     start = time.perf_counter()
     retrieval_ms = rerank_ms = packing_ms = 0.0

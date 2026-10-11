@@ -3,7 +3,7 @@
 import json
 from collections import Counter
 from contextlib import nullcontext
-from datetime import datetime
+from datetime import datetime, timedelta
 from importlib.util import find_spec
 from uuid import uuid4
 
@@ -117,6 +117,46 @@ def test_content_and_half_open_query_time_are_checked():
     assert scored["invalid_time_ids"] == ["new"]
 
 
+@requires_metrics
+@pytest.mark.parametrize("boundary", ["valid_to", "valid_from"])
+def test_out_of_window_read_fails_safety_even_on_a_later_repeat(boundary):
+    case = CASES["static-1"]
+    first = observation(case)
+    at = case.query_time if boundary == "valid_to" else case.query_time + timedelta(seconds=1)
+    invalid = first.retrieved[0].model_copy(update={boundary: at})
+    later = first.model_copy(update={"retrieved": (invalid,)})
+    report = build_report(
+        (case,), {"test": (first, later)}, k=5, token_budget=160, storage={"test": {}}
+    )
+    summary = report["strategies"]["test"]
+    assert summary["task_accuracy"] == 1  # Quality uses the first read.
+    assert summary["ir"]["recall_at_k"] == 1
+    assert not summary["safety_passed"]  # Safety covers every measured read.
+
+
+@pytest.mark.parametrize("status", ["active", "expired", "quarantined"])
+def test_forgetting_checks_validity_even_without_an_absence_label(status):
+    case = CASES["forgetting-4"]
+    assert case.expected_memory_ids
+    obs = observation(case)
+    invalid = obs.retrieved[0].model_copy(update={"valid_to": case.query_time, "status": status})
+    scored = score_case(case, obs.model_copy(update={"retrieved": (invalid,)}), token_budget=160)
+    assert not scored["absence_violations"]
+    assert not scored["forgetting_correct"]
+    assert not scored["passed"]
+
+
+def test_historically_valid_expired_record_can_satisfy_selective_forgetting():
+    case = CASES["forgetting-4"]
+    obs = observation(case)
+    historical = obs.retrieved[0].model_copy(
+        update={"status": "expired", "valid_to": case.query_time + timedelta(days=1)}
+    )
+    scored = score_case(case, obs.model_copy(update={"retrieved": (historical,)}), token_budget=160)
+    assert scored["forgetting_correct"]
+    assert scored["passed"]
+
+
 @pytest.mark.parametrize("case_id", ["forgetting-1", "forgetting-2", "forgetting-3"])
 def test_tombstoned_and_expired_memories_must_stay_absent(case_id):
     case = CASES[case_id]
@@ -194,6 +234,21 @@ def test_runner_records_exception_and_does_not_credit_abstention(monkeypatch):
     assert obs.latency.retrieval_ms > 0
     assert obs.latency.total_ms >= obs.latency.retrieval_ms
     assert not score_case(case, obs, token_budget=160)["passed"]
+
+
+def test_runner_rejects_unknown_strategy_before_reading():
+    case = CASES["static-1"]
+    with pytest.raises(ValueError, match="unknown retrieval strategy"):
+        runner.read_case(
+            lambda: pytest.fail("invalid strategy must not reach the database"),
+            FakeEmbeddingModel(),
+            runner.PreparedCase(case, {"A": uuid4()}),
+            "hybird",
+            k=5,
+            candidates=30,
+            token_budget=160,
+            reranker=CrossEncoderReranker(FakeCrossEncoderModel()),
+        )
 
 
 @requires_metrics

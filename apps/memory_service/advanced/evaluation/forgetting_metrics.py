@@ -17,8 +17,7 @@ def forgetting_correctness(case: BenchmarkCase, observation: BenchmarkObservatio
         observation.error is None
         and not returned.intersection(case.expected_absence_ids)
         and all(
-            hit.status != "tombstone"
-            and not (hit.status == "expired" and not in_effect(hit, case.query_time))
+            hit.status not in ("tombstone", "quarantined") and in_effect(hit, case.query_time)
             for hit in observation.retrieved
         )
     )

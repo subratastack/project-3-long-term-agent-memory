@@ -23,9 +23,9 @@ P50/P95 latency in milliseconds. Retrieval excludes measured reranking time; tot
 
 | Strategy | Retrieval P50/P95 | Rerank P50/P95 | Packing P50/P95 | Total P50/P95 | Mean context tokens | Table bytes | Index bytes | Errors | Safety passed |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| exact_semantic | 4.501/15.978 | 0.000/0.000 | 0.075/0.219 | 5.195/16.863 | 69.575 | 475136 | 409600 | 0 | False |
-| hybrid | 10.721/35.014 | 0.000/0.000 | 0.080/0.219 | 11.445/36.041 | 69.575 | 475136 | 409600 | 0 | False |
-| hybrid_reranker | 10.672/34.371 | 0.029/0.074 | 0.080/0.198 | 11.366/35.353 | 69.575 | 475136 | 409600 | 0 | False |
+| exact_semantic | 4.842/16.939 | 0.000/0.000 | 0.083/0.212 | 5.505/17.835 | 69.575 | 475136 | 409600 | 0 | False |
+| hybrid | 11.429/35.797 | 0.000/0.000 | 0.095/0.215 | 12.264/36.772 | 69.575 | 475136 | 409600 | 0 | False |
+| hybrid_reranker | 11.399/38.030 | 0.031/0.089 | 0.092/0.251 | 12.265/39.264 | 69.575 | 475136 | 409600 | 0 | False |
 | memory_disabled | 0.000/0.000 | 0.000/0.000 | 0.000/0.000 | 0.001/0.001 | 0.000 | 0 | 0 | 0 | True |
 
 Memory-enabled strategies share one seeded PostgreSQL corpus and its measured storage. No-memory uses zero retained-memory storage. Physical sizes include evidence and audit tables; bytes per source write and per-table sizes are in JSON.
@@ -75,7 +75,7 @@ IR averages exclude cases without relevant IDs. Abstention requires empty retrie
 {
   "adapters": "original benchmark-style subsets, not official benchmark scores",
   "candidates": 30,
-  "created_at": "2026-10-04T09:50:56.054001+00:00",
+  "created_at": "2026-10-10T03:29:16.732040+00:00",
   "embedding_dimensions": 384,
   "embedding_model": "fake-hashing-v1",
   "fixture_sha256": "7f9bbc4b50628bcbb025aadb7c213c0ed28a6ce798bd7b4c8f31a96e021544ba",

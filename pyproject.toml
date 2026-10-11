@@ -35,6 +35,7 @@ benchmark = [
   "ranx>=0.3.20,<0.4",
 ]
 vector-benchmark = ["turbovec==1.0.0", "psutil>=7,<8"]
+langmem-benchmark = ["langmem>=0.0.30,<0.1", "langgraph-checkpoint-postgres>=3,<4"]
 
 [dependency-groups]
 dev = [
