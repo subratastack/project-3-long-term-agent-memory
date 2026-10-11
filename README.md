@@ -51,25 +51,14 @@ memories retrieval finds and the query's filters.
 
 ## How the system fits together
 
-```mermaid
-flowchart TD
-    E["Events: messages, logs, configuration"] --> X["Extract proposed memories"]
-    X --> N["Classify, normalize, verify provenance"]
-    N --> W{"Deterministic write policy"}
-    W -->|accept| DB[("PostgreSQL: active memory + audit")]
-    W -->|quarantine| Q[("Held for review + audit")]
-    W -->|reject| A[("Decision audit, no memory record")]
-    N -->|unresolvable source during normalization| P["Pre-policy rejection reported to caller"]
+The agent reads relevant, eligible, packed memories before reasoning. After
+tools finish, their outcomes become evidence from which new memories can be
+proposed and evaluated.
 
-    U["Question + tenant + optional historical time"] --> S["Word search + meaning search"]
-    DB --> S
-    S --> V["Revalidate records and fuse rankings"]
-    V --> R["Optional bounded reranking"]
-    R --> T["Resolve validity, replacements, contradictions"]
-    T --> H["Ranked memories + retrieval report"]
-    H --> C["Pack selected memories into a token budget"]
-    C --> O["Agent context + selection and skip reasons"]
-```
+![System architecture showing the LangGraph agent, governed memory service, and authoritative PostgreSQL storage.](docs/images/1.png)
+
+*A memory service that checks what an agent stores, retrieves, and receives
+as context.*
 
 PostgreSQL is the authoritative store for content, tenant ownership,
 provenance, trust, validity, relationships, and audit decisions. Full-text
@@ -87,6 +76,66 @@ after completed tool outcomes.
 SQLAlchemy and Alembic, Pydantic, and FastAPI. Local sentence-transformers
 models provide embeddings and reranking; Ollama provides LLM extraction.
 Models may download on first use and run locally afterward.
+
+See the [architecture reference](ARCHITECTURE.md) and
+[agent integration](docs/langgraph-integration.md) for the system boundaries
+and read-before-reasoning flow.
+
+### From raw evidence to governed memory
+
+In this illustrative checkout-api example, a `request_timeout=2s`
+configuration event supports a proposed fact. Classification, normalization,
+and provenance verification prepare it for deterministic write policy;
+model confidence does not authorize admission.
+
+![A checkout-api configuration event becomes a proposed memory, passes preparation and verification, and reaches accept, supersede, quarantine, or reject outcomes.](docs/images/2.png)
+
+*The model proposes a memory; deterministic policy decides whether it is
+admitted.* See the [ingestion walkthrough](docs/ingestion-flow.md) for evidence
+requirements, stricter procedure checks, and pre-policy rejection cases.
+
+### Hybrid retrieval: from question to eligible memories
+
+For “checkout-api requests are timing out. What should I check?”, word search
+finds names and terms while meaning search finds related descriptions.
+Both searches revalidate records before their rankings are combined;
+time and recorded-conflict resolution follow optional reranking.
+
+![Word and meaning search lanes revalidate candidates against PostgreSQL, merge through Reciprocal Rank Fusion, optionally rerank, and resolve time and conflicts before context packing.](docs/images/3.png)
+
+*Word and meaning searches find candidates; eligibility rules determine
+which can be used.* The ranks shown are illustrative. See the
+[retrieval guide](docs/retrieval-flow.md) for filters, ordering, and reports.
+
+### Memory across time: updates and conflicts
+
+The timeout example preserves the old 5-second setting for February 15
+and admits the replacement 2-second setting for April 1. Separately,
+recorded contradictions can withhold a lower-trust claim or both equal-trust
+claims, regardless of search score.
+
+![A timeline preserves the old timeout setting for historical queries; a second panel shows higher-trust and unresolved equal-trust contradiction outcomes.](docs/images/4.png)
+
+*Answer using the requested time, and expose recorded conflicts that the
+rules cannot settle.* These illustrative outcomes assume the relevant
+records are found and other filters pass. The resolver follows recorded
+relationships; it does not discover every contradiction in prose. See
+[temporal resolution](docs/temporal-resolution.md).
+
+### Memory evolution: experience, consolidation, and forgetting
+
+Related checkout-api episodes can support a separate semantic or procedural
+candidate. Deterministic consolidation preserves the original episodes and
+their sources, and the candidate still has to pass write policy.
+
+![Related incidents support a new policy-governed memory with evidence links; lifecycle controls reduce influence, expire records, or tombstone them while preserving audit evidence.](docs/images/6.png)
+
+*Consolidation creates a compact new memory while preserving the episodes
+and sources behind it.* Decay and compaction reduce retrieval priority;
+expiry retains applicable historical access; tombstones exclude records
+from current and historical agent retrieval. Deployed scheduling remains
+planned. See [consolidation](docs/consolidation-service.md) and
+[forgetting](docs/forgetting.md) for the rules and limitations.
 
 ## Engineering decisions and their evidence
 
@@ -138,6 +187,18 @@ exclude the experience of a cold model load. See
 [retrieval measurements](docs/retrieval-flow.md#reranking-measured-quality-and-cost).
 
 ### Useful context under a tight budget
+
+Think of context packing as preparing a short briefing for an engineer:
+one incident, a current setting, and a troubleshooting procedure can be
+more useful than three overlapping reports. The packer selects and formats
+existing memories; it does not use an LLM to rewrite them.
+
+![Two 200-token briefings compare repeated incidents with complementary incident, configuration, and procedure memories; duplicate and redundant notes are skipped.](docs/images/5.png)
+
+*Fit a useful combination of evidence into the available prompt space.*
+The diagram uses **illustrative costs**: 30 tokens of framing + 55 for an
+incident + 45 for a fact + 65 for a procedure = 195 tokens within a 200-token
+budget. These are teaching numbers, separate from the measured results below.
 
 Dataset: 24 memories, four queries, real embeddings, subject keys enabled,
 no reranking. At a **150-token budget**, coverage is the share of useful
